@@ -1,0 +1,4 @@
+-- Seed Data Scaffold
+-- Department of Architecture & Planning, VNIT Nagpur — TNP Portal
+-- Note: Seed data implementation belongs to Phase 2.
+-- Do not add schema or data queries in Phase 1.
