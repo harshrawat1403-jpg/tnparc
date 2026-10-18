@@ -4,4 +4,4 @@ out
 build
 supabase/.temp
 package-lock.json
-docs/ARCHITECTURE.md
+docs/

@@ -1,21 +1,76 @@
 /**
  * Application-wide TypeScript types and constants mirroring PostgreSQL ENUMs
- * and database models defined in ARCHITECTURE.md (v1.0).
+ * and database models defined in ARCHITECTURE.md (v1.0) and Addendum A1.0.
  *
  * NOTE: Academic program codes are dynamic records in `academic_programs` and
  * are typed as string aliases, not rigid TypeScript enums.
  */
 
-// User Roles
+// User Roles (Super Admin, TNP Secretary, TNP Coordinator, Student, Recruiter)
 export type UserRole =
-  "STUDENT" | "COORDINATOR" | "OFFICER" | "SUPER_ADMIN" | "RECRUITER";
+  "SUPER_ADMIN" | "TNP_SECRETARY" | "TNP_COORDINATOR" | "STUDENT" | "RECRUITER";
 
 export const USER_ROLES: readonly UserRole[] = [
-  "STUDENT",
-  "COORDINATOR",
-  "OFFICER",
   "SUPER_ADMIN",
+  "TNP_SECRETARY",
+  "TNP_COORDINATOR",
+  "STUDENT",
   "RECRUITER",
+] as const;
+
+// Coordinator Slots
+export type CoordinatorSlot = "SLOT_1" | "SLOT_2";
+
+export const COORDINATOR_SLOTS: readonly CoordinatorSlot[] = [
+  "SLOT_1",
+  "SLOT_2",
+] as const;
+
+// Student Lifecycle Status (Approved in Architecture Addendum A1.0 §3.6)
+export type StudentLifecycleStatus =
+  "STUDENT_ACTIVE" | "STUDENT_GRADUATED" | "ALUMNI";
+
+export const STUDENT_LIFECYCLE_STATUSES: readonly StudentLifecycleStatus[] = [
+  "STUDENT_ACTIVE",
+  "STUDENT_GRADUATED",
+  "ALUMNI",
+] as const;
+
+// Verification Statuses
+export type VerificationStatus =
+  "UNVERIFIED" | "VERIFIED" | "CORRECTION_PENDING";
+
+export const VERIFICATION_STATUSES: readonly VerificationStatus[] = [
+  "UNVERIFIED",
+  "VERIFIED",
+  "CORRECTION_PENDING",
+] as const;
+
+// Skill Verification Statuses
+export type SkillVerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
+
+export const SKILL_VERIFICATION_STATUSES: readonly SkillVerificationStatus[] = [
+  "PENDING",
+  "VERIFIED",
+  "REJECTED",
+] as const;
+
+// Evidence Types
+export type EvidenceType = "PROJECT_LINK" | "PDF_DOCUMENT";
+
+export const EVIDENCE_TYPES: readonly EvidenceType[] = [
+  "PROJECT_LINK",
+  "PDF_DOCUMENT",
+] as const;
+
+// Invitation Statuses
+export type InvitationStatus = "PENDING" | "ACCEPTED" | "EXPIRED" | "REVOKED";
+
+export const INVITATION_STATUSES: readonly InvitationStatus[] = [
+  "PENDING",
+  "ACCEPTED",
+  "EXPIRED",
+  "REVOKED",
 ] as const;
 
 // Drive Types
@@ -26,36 +81,60 @@ export const DRIVE_TYPES: readonly DriveType[] = [
   "INTERNSHIP",
 ] as const;
 
-// Drive Statuses
-export type DriveStatus =
-  "DRAFT" | "PUBLISHED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+// Drive Statuses (FSM: DRAFT -> PUBLISHED -> CLOSED -> ARCHIVED)
+export type DriveStatus = "DRAFT" | "PUBLISHED" | "CLOSED" | "ARCHIVED";
 
 export const DRIVE_STATUSES: readonly DriveStatus[] = [
   "DRAFT",
   "PUBLISHED",
-  "IN_PROGRESS",
-  "COMPLETED",
-  "CANCELLED",
+  "CLOSED",
+  "ARCHIVED",
 ] as const;
 
 // Application Statuses
 export type ApplicationStatus =
   | "APPLIED"
-  | "WITHDRAWN"
   | "SHORTLISTED"
-  | "TEST_SCHEDULED"
-  | "INTERVIEW_SCHEDULED"
+  | "INTERVIEW"
+  | "SELECTED"
   | "REJECTED"
-  | "SELECTED";
+  | "WITHDRAWN";
 
 export const APPLICATION_STATUSES: readonly ApplicationStatus[] = [
   "APPLIED",
-  "WITHDRAWN",
   "SHORTLISTED",
-  "TEST_SCHEDULED",
-  "INTERVIEW_SCHEDULED",
-  "REJECTED",
+  "INTERVIEW",
   "SELECTED",
+  "REJECTED",
+  "WITHDRAWN",
+] as const;
+
+// Document Types
+export type DocumentType = "RESUME" | "SKILL_EVIDENCE" | "PROFILE_PHOTO";
+
+export const DOCUMENT_TYPES: readonly DocumentType[] = [
+  "RESUME",
+  "SKILL_EVIDENCE",
+  "PROFILE_PHOTO",
+] as const;
+
+// Announcement Audiences
+export type AnnouncementAudience = "ALL" | "STUDENTS" | "RECRUITERS" | "STAFF";
+
+export const ANNOUNCEMENT_AUDIENCES: readonly AnnouncementAudience[] = [
+  "ALL",
+  "STUDENTS",
+  "RECRUITERS",
+  "STAFF",
+] as const;
+
+// Announcement Statuses
+export type AnnouncementStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+export const ANNOUNCEMENT_STATUSES: readonly AnnouncementStatus[] = [
+  "DRAFT",
+  "PUBLISHED",
+  "ARCHIVED",
 ] as const;
 
 // Academic Evaluation Result (from eligibility evaluation)
@@ -137,9 +216,8 @@ export type AuditActionType =
   | "DRIVE_CREATED"
   | "DRIVE_UPDATED"
   | "DRIVE_PUBLISHED"
-  | "DRIVE_IN_PROGRESS"
-  | "DRIVE_COMPLETED"
-  | "DRIVE_CANCELLED"
+  | "DRIVE_CLOSED"
+  | "DRIVE_ARCHIVED"
   | "RECRUITER_DRIVE_GRANTED"
   | "RECRUITER_DRIVE_REVOKED"
   | "APPLICATION_SUBMITTED"
