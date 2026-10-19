@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -1214,7 +1214,39 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      _coordinator_has_scope_over: {
+        Args: { p_student_id: string };
+        Returns: boolean;
+      };
+      assign_role: {
+        Args: {
+          p_coordinator_slot?: Database["public"]["Enums"]["coordinator_slot"];
+          p_new_role: Database["public"]["Enums"]["user_role"];
+          p_target_profile_id: string;
+        };
+        Returns: Json;
+      };
+      can_access_student: { Args: { p_student_id: string }; Returns: boolean };
+      get_student_lifecycle_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: Database["public"]["Enums"]["student_lifecycle_status"];
+      };
+      get_user_role: {
+        Args: Record<PropertyKey, never>;
+        Returns: Database["public"]["Enums"]["user_role"];
+      };
+      is_active_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_active_student: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_super_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      provision_student_account: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      remove_staff_role: {
+        Args: { p_target_profile_id: string };
+        Returns: Json;
+      };
     };
     Enums: {
       announcement_audience: "ALL" | "STUDENTS" | "RECRUITERS" | "STAFF";

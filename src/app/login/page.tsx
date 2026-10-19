@@ -5,9 +5,10 @@ import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
+import { LoginForm } from "./LoginForm";
+
+export const instant = false;
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -15,7 +16,26 @@ export const metadata: Metadata = {
     "Sign in to the Department of Architecture & Planning TNP Portal, VNIT Nagpur.",
 };
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{
+    redirectTo?: string;
+    error?: string;
+    notice?: string;
+  }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+
+  let initialError: string | undefined = undefined;
+  if (params.error === "account_deactivated") {
+    initialError =
+      "Your account has been deactivated. Please contact the TNP office.";
+  } else if (params.error === "auth_callback_failed") {
+    initialError =
+      "Authentication link was invalid or has expired. Please sign in or request a new link.";
+  }
+
   return (
     <div className="py-12 sm:py-20 flex items-center justify-center">
       <Container size="sm">
@@ -29,75 +49,31 @@ export default function LoginPage() {
               Sign In to Your Account
             </Heading>
             <Text variant="secondary" className="max-w-md">
-              Access drives, manage student profiles, or administer departmental
-              placements.
+              Access drives, student profiles, coordinator tools, or placement
+              administration.
             </Text>
           </div>
 
           {/* Login Card */}
           <Card padding="lg" className="border-[var(--color-border)] shadow-sm">
-            <form
-              aria-label="Sign In Form"
-              className="flex flex-col gap-4"
-              onSubmit={undefined}
-            >
-              <Input
-                label="Email Address"
-                type="email"
-                id="email"
-                name="email"
-                autoComplete="email"
-                required
-                placeholder="student@students.vnit.ac.in"
-                helperText="Use your institutional email address."
-              />
-
-              <Input
-                label="Password"
-                type="password"
-                id="password"
-                name="password"
-                autoComplete="current-password"
-                required
-                placeholder="••••••••••••"
-              />
-
-              <div className="flex items-center justify-between text-xs pt-1">
-                <span className="text-[var(--color-text-secondary)]">
-                  Forgot your password?
-                </span>
-                <span className="text-[var(--color-accent)] font-medium">
-                  Contact T&P Coordinator
-                </span>
-              </div>
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="md"
-                className="w-full mt-2"
+            {params.notice === "password_updated" && (
+              <div
+                role="status"
+                className="mb-4 p-3 text-xs bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 rounded-[var(--radius-md)] border border-emerald-200 dark:border-emerald-900"
               >
-                Sign In
-              </Button>
-            </form>
-
-            {/* Phase Notice */}
-            <div className="mt-6 pt-6 border-t border-[var(--color-border)]">
-              <div className="flex items-start gap-2 bg-[var(--color-surface-alt)] p-3 rounded-[var(--radius-md)] border border-[var(--color-border)]">
-                <span className="text-xs font-mono font-bold text-[var(--color-accent)] mt-0.5">
-                  INFO
-                </span>
-                <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                  <strong>Phase 1 Presentation Scaffold:</strong> Authentication
-                  integration (Supabase Auth email/password, session tokens, and
-                  roster validation) is scheduled for activation in Phase 3.
-                </p>
+                Password updated successfully. Please sign in with your new
+                password.
               </div>
-            </div>
+            )}
 
-            <div className="mt-4 text-center">
+            <LoginForm
+              redirectTo={params.redirectTo}
+              initialError={initialError}
+            />
+
+            <div className="mt-6 pt-6 border-t border-[var(--color-border)] text-center">
               <p className="text-xs text-[var(--color-text-secondary)]">
-                First time student activating account?{" "}
+                Eligible student activating your roster account?{" "}
                 <Link
                   href="/signup"
                   className="font-medium text-[var(--color-accent)] hover:underline"
