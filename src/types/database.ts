@@ -825,6 +825,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "recruiter_drive_access_recruiter_profile_id_fkey";
+            columns: ["recruiter_profile_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_recruiter_contacts";
+            referencedColumns: ["recruiter_profile_id"];
+          },
+          {
             foreignKeyName: "recruiter_drive_access_revoked_by_fkey";
             columns: ["revoked_by"];
             isOneToOne: false;
@@ -837,6 +844,7 @@ export type Database = {
         Row: {
           accepted_at: string | null;
           created_at: string;
+          delivery_confirmed_at: string | null;
           expires_at: string;
           id: string;
           invited_at: string;
@@ -850,6 +858,7 @@ export type Database = {
         Insert: {
           accepted_at?: string | null;
           created_at?: string;
+          delivery_confirmed_at?: string | null;
           expires_at: string;
           id?: string;
           invited_at?: string;
@@ -862,6 +871,7 @@ export type Database = {
         Update: {
           accepted_at?: string | null;
           created_at?: string;
+          delivery_confirmed_at?: string | null;
           expires_at?: string;
           id?: string;
           invited_at?: string;
@@ -884,6 +894,13 @@ export type Database = {
             columns: ["recruiter_contact_id"];
             isOneToOne: false;
             referencedRelation: "recruiter_contacts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_invitations_recruiter_contact_id_fkey";
+            columns: ["recruiter_contact_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_recruiter_contacts";
             referencedColumns: ["id"];
           },
           {
@@ -938,6 +955,13 @@ export type Database = {
             columns: ["recruiter_contact_id"];
             isOneToOne: true;
             referencedRelation: "recruiter_contacts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_profiles_recruiter_contact_id_fkey";
+            columns: ["recruiter_contact_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_recruiter_contacts";
             referencedColumns: ["id"];
           },
         ];
@@ -1225,6 +1249,47 @@ export type Database = {
       };
     };
     Views: {
+      v_staff_recruiter_contacts: {
+        Row: {
+          bound_profile_id: string | null;
+          company_id: string | null;
+          company_is_archived: boolean | null;
+          company_name: string | null;
+          computed_invitation_status: string | null;
+          created_at: string | null;
+          designation: string | null;
+          email: string | null;
+          full_name: string | null;
+          id: string | null;
+          is_active: boolean | null;
+          latest_accepted_at: string | null;
+          latest_delivery_confirmed_at: string | null;
+          latest_expires_at: string | null;
+          latest_invitation_id: string | null;
+          latest_invited_at: string | null;
+          latest_revoked_at: string | null;
+          phone: string | null;
+          recruiter_profile_id: string | null;
+          updated_at: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "recruiter_contacts_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_profiles_profile_id_fkey";
+            columns: ["bound_profile_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       v_staff_skill_reviews: {
         Row: {
           batch: string | null;
@@ -1276,6 +1341,11 @@ export type Database = {
         Args: { p_student_id: string };
         Returns: boolean;
       };
+      accept_recruiter_invitation: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      archive_company: { Args: { p_company_id: string }; Returns: Json };
       archive_student_skill: {
         Args: { p_student_skill_id: string };
         Returns: Json;
@@ -1326,8 +1396,30 @@ export type Database = {
         };
         Returns: Json;
       };
+      create_company: {
+        Args: { p_description?: string; p_name: string; p_website?: string };
+        Returns: Json;
+      };
+      create_recruiter_contact: {
+        Args: {
+          p_company_id: string;
+          p_designation?: string;
+          p_email: string;
+          p_full_name: string;
+          p_phone?: string;
+        };
+        Returns: Json;
+      };
+      create_recruiter_invitation: {
+        Args: { p_contact_id: string };
+        Returns: Json;
+      };
       create_skill: {
         Args: { p_category?: string; p_description?: string; p_name: string };
+        Returns: Json;
+      };
+      deactivate_recruiter_contact: {
+        Args: { p_contact_id: string };
         Returns: Json;
       };
       deactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
@@ -1349,14 +1441,27 @@ export type Database = {
       };
       is_active_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_active_student: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_admin_or_secretary: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       is_current_user_active_student: {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
       };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_super_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      mark_invitation_delivery_confirmed: {
+        Args: { p_invitation_id: string };
+        Returns: Json;
+      };
       provision_student_account: {
         Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      reactivate_company: { Args: { p_company_id: string }; Returns: Json };
+      reactivate_recruiter_contact: {
+        Args: { p_contact_id: string };
         Returns: Json;
       };
       reactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
@@ -1389,11 +1494,24 @@ export type Database = {
         Args: { p_student_skill_id: string };
         Returns: Json;
       };
+      revoke_recruiter_invitation: {
+        Args: { p_invitation_id: string };
+        Returns: Json;
+      };
       submit_skill_evidence_link: {
         Args: {
           p_description?: string;
           p_evidence_url: string;
           p_student_skill_id: string;
+        };
+        Returns: Json;
+      };
+      update_company: {
+        Args: {
+          p_company_id: string;
+          p_description?: string;
+          p_name: string;
+          p_website?: string;
         };
         Returns: Json;
       };
@@ -1410,6 +1528,15 @@ export type Database = {
           p_portfolio_url?: string;
           p_public_headline?: string;
           p_public_tagline?: string;
+        };
+        Returns: Json;
+      };
+      update_recruiter_contact: {
+        Args: {
+          p_contact_id: string;
+          p_designation?: string;
+          p_full_name: string;
+          p_phone?: string;
         };
         Returns: Json;
       };

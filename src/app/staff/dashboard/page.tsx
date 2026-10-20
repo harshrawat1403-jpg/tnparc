@@ -177,6 +177,46 @@ export default async function StaffDashboardPage() {
                 </Button>
               </Link>
             </Card>
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
+                  Companies Directory
+                </Heading>
+                <Badge variant="default" size="sm">
+                  CRM
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Manage canonical recruiting entities, maintain corporate
+                profiles, and configure industry partner relationships.
+              </Text>
+              <Link href="/staff/companies">
+                <Button variant="secondary" size="sm" className="w-full">
+                  Manage Companies →
+                </Button>
+              </Link>
+            </Card>
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
+                  Recruiter Management
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Invitations
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Maintain corporate contact records, issue 7-day portal
+                invitations, and manage recruiter account onboarding.
+              </Text>
+              <Link href="/staff/recruiters">
+                <Button variant="primary" size="sm" className="w-full">
+                  Manage Recruiters →
+                </Button>
+              </Link>
+            </Card>
           </div>
         </div>
       </Container>
