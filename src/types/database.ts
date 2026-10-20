@@ -1145,6 +1145,13 @@ export type Database = {
             referencedRelation: "student_skills";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "student_skill_evidence_student_skill_id_fkey";
+            columns: ["student_skill_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_skill_reviews";
+            referencedColumns: ["student_skill_id"];
+          },
         ];
       };
       student_skills: {
@@ -1194,6 +1201,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "student_skills_skill_id_fkey";
+            columns: ["skill_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_skill_reviews";
+            referencedColumns: ["skill_id"];
+          },
+          {
             foreignKeyName: "student_skills_student_id_fkey";
             columns: ["student_id"];
             isOneToOne: false;
@@ -1211,12 +1225,60 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      v_staff_skill_reviews: {
+        Row: {
+          batch: string | null;
+          claim_created_at: string | null;
+          claim_updated_at: string | null;
+          evidence_description: string | null;
+          evidence_id: string | null;
+          evidence_storage_path: string | null;
+          evidence_submitted_at: string | null;
+          evidence_type: Database["public"]["Enums"]["evidence_type"] | null;
+          evidence_url: string | null;
+          is_active: boolean | null;
+          proficiency_level: number | null;
+          program_code: string | null;
+          program_name: string | null;
+          skill_category: string | null;
+          skill_id: string | null;
+          skill_name: string | null;
+          student_id: string | null;
+          student_name: string | null;
+          student_skill_id: string | null;
+          verification_status:
+            Database["public"]["Enums"]["skill_verification_status"] | null;
+          verified_at: string | null;
+          verified_by: string | null;
+          verifier_name: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "student_skills_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "student_skills_verified_by_fkey";
+            columns: ["verified_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       _coordinator_has_scope_over: {
         Args: { p_student_id: string };
         Returns: boolean;
+      };
+      archive_student_skill: {
+        Args: { p_student_skill_id: string };
+        Returns: Json;
       };
       assign_role: {
         Args: {
@@ -1235,6 +1297,26 @@ export type Database = {
         Args: { p_student_id: string };
         Returns: boolean;
       };
+      can_staff_access_photo_object: {
+        Args: { p_object_name: string };
+        Returns: boolean;
+      };
+      can_staff_access_resume_object: {
+        Args: { p_object_name: string };
+        Returns: boolean;
+      };
+      can_staff_access_skill_evidence: {
+        Args: { p_object_name: string };
+        Returns: boolean;
+      };
+      can_student_access_own_skill_evidence: {
+        Args: { p_object_name: string };
+        Returns: boolean;
+      };
+      claim_student_skill: {
+        Args: { p_proficiency_level: number; p_skill_id: string };
+        Returns: Json;
+      };
       correct_student_academic_record: {
         Args: {
           p_active_backlogs: number;
@@ -1244,6 +1326,11 @@ export type Database = {
         };
         Returns: Json;
       };
+      create_skill: {
+        Args: { p_category?: string; p_description?: string; p_name: string };
+        Returns: Json;
+      };
+      deactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
       get_my_lifecycle: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["student_lifecycle_status"];
@@ -1272,6 +1359,15 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      reactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
+      register_skill_evidence_pdf: {
+        Args: {
+          p_description?: string;
+          p_storage_path: string;
+          p_student_skill_id: string;
+        };
+        Returns: Json;
+      };
       register_student_resume: {
         Args: {
           p_file_name: string;
@@ -1281,8 +1377,24 @@ export type Database = {
         };
         Returns: Json;
       };
+      reject_student_skill: {
+        Args: { p_reason?: string; p_student_skill_id: string };
+        Returns: Json;
+      };
       remove_staff_role: {
         Args: { p_target_profile_id: string };
+        Returns: Json;
+      };
+      resubmit_student_skill: {
+        Args: { p_student_skill_id: string };
+        Returns: Json;
+      };
+      submit_skill_evidence_link: {
+        Args: {
+          p_description?: string;
+          p_evidence_url: string;
+          p_student_skill_id: string;
+        };
         Returns: Json;
       };
       update_own_profile_photo: {
@@ -1301,12 +1413,29 @@ export type Database = {
         };
         Returns: Json;
       };
+      update_skill: {
+        Args: {
+          p_category?: string;
+          p_description?: string;
+          p_name: string;
+          p_skill_id: string;
+        };
+        Returns: Json;
+      };
+      update_student_skill_proficiency: {
+        Args: { p_proficiency_level: number; p_student_skill_id: string };
+        Returns: Json;
+      };
       verify_student_academic_record: {
         Args: {
           p_active_backlogs: number;
           p_cgpa: number;
           p_target_profile_id: string;
         };
+        Returns: Json;
+      };
+      verify_student_skill: {
+        Args: { p_student_skill_id: string };
         Returns: Json;
       };
     };

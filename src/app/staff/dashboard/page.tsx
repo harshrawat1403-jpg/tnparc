@@ -136,6 +136,47 @@ export default async function StaffDashboardPage() {
                 </Button>
               </Link>
             </Card>
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
+                  Skills Catalog
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Catalog
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Manage the department-approved skills catalog. Super Admin and
+                Secretary can create and modify skills; Coordinators have
+                read-only access.
+              </Text>
+              <Link href="/staff/skills">
+                <Button variant="secondary" size="sm" className="w-full">
+                  Manage Skills Catalog →
+                </Button>
+              </Link>
+            </Card>
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
+                  Skill Review Queue
+                </Heading>
+                <Badge variant="warning" size="sm">
+                  Reviews
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Review student skill claims and audit attached portfolio links
+                or PDF evidence within your scoped batch authority.
+              </Text>
+              <Link href="/staff/skills/reviews">
+                <Button variant="primary" size="sm" className="w-full">
+                  Open Verification Queue →
+                </Button>
+              </Link>
+            </Card>
           </div>
         </div>
       </Container>

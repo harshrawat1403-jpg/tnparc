@@ -68,6 +68,13 @@ export default async function StudentDashboardPage() {
     .eq("is_current", true)
     .maybeSingle();
 
+  // 5. Fetch active skills count
+  const { count: skillsCount } = await supabase
+    .from("student_skills")
+    .select("*", { count: "exact", head: true })
+    .eq("student_id", user.id)
+    .eq("is_active", true);
+
   const completeness = studentProfile?.profile_completeness ?? 0;
   const isVerified = academic?.verification_status === "VERIFIED";
 
@@ -101,6 +108,12 @@ export default async function StudentDashboardPage() {
             </div>
 
             <div className="flex items-center gap-3">
+              <Link
+                href="/student/skills"
+                className="text-xs px-3 py-1.5 rounded-[var(--radius-md)] bg-[var(--color-bg-secondary)] text-[var(--color-text)] border border-[var(--color-border)] hover:bg-[var(--color-bg-tertiary)] font-medium"
+              >
+                Skills ({skillsCount ?? 0}/15)
+              </Link>
               <Link
                 href="/student/profile"
                 className="text-xs px-3 py-1.5 rounded-[var(--radius-md)] bg-[var(--color-primary)] text-white hover:opacity-90 font-medium"
@@ -206,7 +219,7 @@ export default async function StudentDashboardPage() {
           </Card>
 
           {/* Quick Stats & Navigation */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Academic Standing */}
             <Card padding="md">
               <div className="flex items-center justify-between mb-2">
@@ -278,6 +291,34 @@ export default async function StudentDashboardPage() {
                   className="text-xs text-[var(--color-primary)] hover:underline font-medium"
                 >
                   {resume ? "Manage Resume &rarr;" : "Upload Resume PDF &rarr;"}
+                </Link>
+              </div>
+            </Card>
+
+            {/* Skills & Endorsements */}
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-2">
+                <Heading level={3} className="text-base">
+                  Skills & Endorsements
+                </Heading>
+                <Badge
+                  variant={skillsCount && skillsCount > 0 ? "info" : "default"}
+                  size="sm"
+                >
+                  {skillsCount || 0} / 15 Claimed
+                </Badge>
+              </div>
+              <p className="text-sm font-medium">Advisory Skills</p>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                Claim up to 15 skills, attach evidence, and track verification.
+              </p>
+
+              <div className="mt-6 pt-3 border-t border-[var(--color-border)]">
+                <Link
+                  href="/student/skills"
+                  className="text-xs text-[var(--color-primary)] hover:underline font-medium"
+                >
+                  Manage Skills & Evidence &rarr;
                 </Link>
               </div>
             </Card>
