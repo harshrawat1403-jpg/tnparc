@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -117,16 +118,23 @@ export default async function StaffDashboardPage() {
             </Card>
 
             <Card padding="md">
-              <Heading level={3} className="text-base mb-1">
-                Phase 3 Security Verification Shell
-              </Heading>
-              <Text variant="secondary" className="text-xs mb-3">
-                Protected staff routing and security boundaries active.
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
+                  Student Directory
+                </Heading>
+                <Badge variant="default" size="sm">
+                  Active
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Access student rosters, view detailed professional profiles, and
+                inspect verified academic standing.
               </Text>
-              <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                Academic verification workflows, student directory management,
-                and skill endorsements will activate in Phase 4 and Phase 5.
-              </p>
+              <Link href="/staff/students">
+                <Button variant="primary" size="sm" className="w-full">
+                  Open Student Directory →
+                </Button>
+              </Link>
             </Card>
           </div>
         </div>

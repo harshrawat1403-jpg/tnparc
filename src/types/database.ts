@@ -1226,7 +1226,32 @@ export type Database = {
         };
         Returns: Json;
       };
+      calculate_student_profile_completeness: {
+        Args: { p_student_id: string };
+        Returns: number;
+      };
       can_access_student: { Args: { p_student_id: string }; Returns: boolean };
+      can_current_user_access_student: {
+        Args: { p_student_id: string };
+        Returns: boolean;
+      };
+      correct_student_academic_record: {
+        Args: {
+          p_active_backlogs: number;
+          p_cgpa: number;
+          p_reason: string;
+          p_target_profile_id: string;
+        };
+        Returns: Json;
+      };
+      get_my_lifecycle: {
+        Args: Record<PropertyKey, never>;
+        Returns: Database["public"]["Enums"]["student_lifecycle_status"];
+      };
+      get_my_role: {
+        Args: Record<PropertyKey, never>;
+        Returns: Database["public"]["Enums"]["user_role"];
+      };
       get_student_lifecycle_status: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["student_lifecycle_status"];
@@ -1237,14 +1262,51 @@ export type Database = {
       };
       is_active_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_active_student: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_current_user_active_student: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_super_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       provision_student_account: {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      register_student_resume: {
+        Args: {
+          p_file_name: string;
+          p_file_size_bytes: number;
+          p_mime_type: string;
+          p_storage_path: string;
+        };
+        Returns: Json;
+      };
       remove_staff_role: {
         Args: { p_target_profile_id: string };
+        Returns: Json;
+      };
+      update_own_profile_photo: {
+        Args: { p_storage_path: string };
+        Returns: Json;
+      };
+      update_own_student_profile: {
+        Args: {
+          p_bio?: string;
+          p_linkedin_url?: string;
+          p_other_links?: Json;
+          p_phone?: string;
+          p_portfolio_url?: string;
+          p_public_headline?: string;
+          p_public_tagline?: string;
+        };
+        Returns: Json;
+      };
+      verify_student_academic_record: {
+        Args: {
+          p_active_backlogs: number;
+          p_cgpa: number;
+          p_target_profile_id: string;
+        };
         Returns: Json;
       };
     };
