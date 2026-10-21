@@ -206,6 +206,7 @@ export type Database = {
           previous_status:
             Database["public"]["Enums"]["application_status"] | null;
           reason: string | null;
+          transition_sequence: number;
         };
         ComputedFields: never;
         Insert: {
@@ -218,6 +219,7 @@ export type Database = {
           previous_status?:
             Database["public"]["Enums"]["application_status"] | null;
           reason?: string | null;
+          transition_sequence?: number;
         };
         Update: {
           application_id?: string;
@@ -229,6 +231,7 @@ export type Database = {
           previous_status?:
             Database["public"]["Enums"]["application_status"] | null;
           reason?: string | null;
+          transition_sequence?: number;
         };
         Relationships: [
           {
@@ -237,6 +240,20 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "applications";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_applications";
+            referencedColumns: ["application_id"];
+          },
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["application_id"];
           },
           {
             foreignKeyName: "application_status_history_changed_by_fkey";
@@ -251,6 +268,7 @@ export type Database = {
         Row: {
           applied_at: string;
           created_at: string;
+          current_sequence: number;
           drive_id: string;
           id: string;
           snapshot_backlogs: number | null;
@@ -263,6 +281,7 @@ export type Database = {
         Insert: {
           applied_at?: string;
           created_at?: string;
+          current_sequence?: number;
           drive_id: string;
           id?: string;
           snapshot_backlogs?: number | null;
@@ -274,6 +293,7 @@ export type Database = {
         Update: {
           applied_at?: string;
           created_at?: string;
+          current_sequence?: number;
           drive_id?: string;
           id?: string;
           snapshot_backlogs?: number | null;
@@ -720,6 +740,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
+          {
             foreignKeyName: "placement_drives_created_by_fkey";
             columns: ["created_by"];
             isOneToOne: false;
@@ -823,6 +850,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "companies";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_contacts_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
           },
           {
             foreignKeyName: "recruiter_contacts_created_by_fkey";
@@ -1026,6 +1060,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "companies";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_profiles_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
           },
           {
             foreignKeyName: "recruiter_profiles_profile_id_fkey";
@@ -1364,6 +1405,143 @@ export type Database = {
             referencedRelation: "companies";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
+        ];
+      };
+      v_staff_application_history: {
+        Row: {
+          application_id: string | null;
+          changed_by: string | null;
+          changed_by_name: string | null;
+          changed_by_role: Database["public"]["Enums"]["user_role"] | null;
+          created_at: string | null;
+          id: string | null;
+          is_terminal_correction: boolean | null;
+          new_status: Database["public"]["Enums"]["application_status"] | null;
+          previous_status:
+            Database["public"]["Enums"]["application_status"] | null;
+          reason: string | null;
+          transition_sequence: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "applications";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_applications";
+            referencedColumns: ["application_id"];
+          },
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["application_id"];
+          },
+          {
+            foreignKeyName: "application_status_history_changed_by_fkey";
+            columns: ["changed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      v_staff_applications: {
+        Row: {
+          application_deadline: string | null;
+          application_id: string | null;
+          application_status:
+            Database["public"]["Enums"]["application_status"] | null;
+          applied_at: string | null;
+          company_id: string | null;
+          company_name: string | null;
+          drive_id: string | null;
+          drive_status: Database["public"]["Enums"]["drive_status"] | null;
+          drive_title: string | null;
+          drive_type: Database["public"]["Enums"]["drive_type"] | null;
+          program_code: string | null;
+          program_id: string | null;
+          program_name: string | null;
+          snapshot_backlogs: number | null;
+          snapshot_cgpa: number | null;
+          student_batch: string | null;
+          student_id: string | null;
+          student_name: string | null;
+          updated_at: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "academic_records_program_id_fkey";
+            columns: ["program_id"];
+            isOneToOne: false;
+            referencedRelation: "academic_programs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "placement_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_recruiter_granted_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_published_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
         ];
       };
       v_staff_drives: {
@@ -1422,6 +1600,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
+          {
             foreignKeyName: "placement_drives_created_by_fkey";
             columns: ["created_by"];
             isOneToOne: false;
@@ -1468,6 +1653,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "companies";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_contacts_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
           },
           {
             foreignKeyName: "recruiter_profiles_profile_id_fkey";
@@ -1523,6 +1715,118 @@ export type Database = {
           },
         ];
       };
+      v_student_application_timeline: {
+        Row: {
+          application_id: string | null;
+          created_at: string | null;
+          id: string | null;
+          new_status: Database["public"]["Enums"]["application_status"] | null;
+          previous_status:
+            Database["public"]["Enums"]["application_status"] | null;
+          transition_sequence: number | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          application_id?: string | null;
+          created_at?: string | null;
+          id?: string | null;
+          new_status?: Database["public"]["Enums"]["application_status"] | null;
+          previous_status?:
+            Database["public"]["Enums"]["application_status"] | null;
+          transition_sequence?: number | null;
+        };
+        Update: {
+          application_id?: string | null;
+          created_at?: string | null;
+          id?: string | null;
+          new_status?: Database["public"]["Enums"]["application_status"] | null;
+          previous_status?:
+            Database["public"]["Enums"]["application_status"] | null;
+          transition_sequence?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "applications";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_applications";
+            referencedColumns: ["application_id"];
+          },
+          {
+            foreignKeyName: "application_status_history_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["application_id"];
+          },
+        ];
+      };
+      v_student_applications: {
+        Row: {
+          application_deadline: string | null;
+          application_id: string | null;
+          application_status:
+            Database["public"]["Enums"]["application_status"] | null;
+          applied_at: string | null;
+          can_withdraw: boolean | null;
+          company_id: string | null;
+          company_name: string | null;
+          company_website: string | null;
+          drive_id: string | null;
+          drive_status: Database["public"]["Enums"]["drive_status"] | null;
+          drive_title: string | null;
+          drive_type: Database["public"]["Enums"]["drive_type"] | null;
+          snapshot_backlogs: number | null;
+          snapshot_cgpa: number | null;
+          student_id: string | null;
+          updated_at: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "placement_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_recruiter_granted_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_published_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       v_student_published_drives: {
         Row: {
           application_deadline: string | null;
@@ -1551,6 +1855,13 @@ export type Database = {
             referencedRelation: "companies";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
         ];
       };
     };
@@ -1571,6 +1882,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      apply_to_drive: { Args: { p_drive_id: string }; Returns: Json };
       archive_company: { Args: { p_company_id: string }; Returns: Json };
       archive_placement_drive: { Args: { p_drive_id: string }; Returns: Json };
       archive_student_skill: {
@@ -1640,6 +1952,10 @@ export type Database = {
           p_reason: string;
           p_target_profile_id: string;
         };
+        Returns: Json;
+      };
+      correct_terminal_status: {
+        Args: { p_application_id: string; p_reason: string };
         Returns: Json;
       };
       create_company: {
@@ -1743,10 +2059,6 @@ export type Database = {
         Returns: Json;
       };
       reactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
-      recruiter_has_granted_drive_for_company: {
-        Args: { p_company_id: string };
-        Returns: boolean;
-      };
       register_skill_evidence_pdf: {
         Args: {
           p_description?: string;
@@ -1789,6 +2101,14 @@ export type Database = {
           p_description?: string;
           p_evidence_url: string;
           p_student_skill_id: string;
+        };
+        Returns: Json;
+      };
+      transition_application_status: {
+        Args: {
+          p_application_id: string;
+          p_new_status: Database["public"]["Enums"]["application_status"];
+          p_reason?: string;
         };
         Returns: Json;
       };
@@ -1863,6 +2183,10 @@ export type Database = {
       };
       verify_student_skill: {
         Args: { p_student_skill_id: string };
+        Returns: Json;
+      };
+      withdraw_application: {
+        Args: { p_application_id: string; p_reason?: string };
         Returns: Json;
       };
     };

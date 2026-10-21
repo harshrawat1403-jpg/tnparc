@@ -202,6 +202,49 @@ export default async function StaffDashboardPage() {
             <Card padding="md">
               <div className="flex items-center justify-between mb-1">
                 <Heading level={3} className="text-base">
+                  Application Review
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Workflow
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Review candidate applications, execute status transitions, and
+                inspect append-only audit histories within your assigned scope.
+              </Text>
+              <Link href="/staff/applications">
+                <Button variant="primary" size="sm" className="w-full">
+                  Review Applications →
+                </Button>
+              </Link>
+            </Card>
+
+            {profile.role === "SUPER_ADMIN" && (
+              <Card padding="md">
+                <div className="flex items-center justify-between mb-1">
+                  <Heading level={3} className="text-base">
+                    Terminal Recovery
+                  </Heading>
+                  <Badge variant="danger" size="sm">
+                    Super Admin
+                  </Badge>
+                </div>
+                <Text variant="secondary" className="text-xs mb-4">
+                  Authoritatively reverse terminal states (SELECTED, REJECTED,
+                  WITHDRAWN) to prior non-terminal standing with mandatory
+                  justification.
+                </Text>
+                <Link href="/admin/recovery">
+                  <Button variant="destructive" size="sm" className="w-full">
+                    Terminal Recovery Portal →
+                  </Button>
+                </Link>
+              </Card>
+            )}
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
                   Companies Directory
                 </Heading>
                 <Badge variant="default" size="sm">

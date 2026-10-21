@@ -8,6 +8,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { StudentDriveApplicationCard } from "./StudentDriveApplicationCard";
 
 export const instant = false;
 
@@ -94,6 +95,13 @@ export default async function StudentDriveDetailPage({ params }: PageProps) {
     `
     )
     .eq("drive_id", driveId);
+
+  // 4. Fetch existing application if student has applied
+  const { data: existingApp } = await supabase
+    .from("v_student_applications")
+    .select("application_id, application_status, applied_at, can_withdraw")
+    .eq("drive_id", driveId)
+    .maybeSingle();
 
   // Helper to format reason code messages
   function getReasonExplanation(code: string): string {
@@ -259,16 +267,16 @@ export default async function StudentDriveDetailPage({ params }: PageProps) {
               )}
             </div>
 
-            {/* Note: Phase 7 explicit constraint: NO Apply button */}
-            <div className="mt-4 pt-3 border-t border-[var(--color-border)] flex items-center justify-between text-xs text-[var(--color-text-secondary)]">
-              <span>
-                Eligibility is evaluated continuously on the database server.
-                Candidate applications open in the upcoming phase.
-              </span>
-              <span className="font-semibold italic">
-                Application Workflow: Phase 8 (Display Only in Phase 7)
-              </span>
-            </div>
+            {/* Phase 8 Interactive Application & Status Card */}
+            <StudentDriveApplicationCard
+              driveId={driveId}
+              driveTitle={drive.title || "Placement Drive"}
+              isOpen={drive.is_open ?? false}
+              academicResult={academic_result}
+              isAvailable={is_available}
+              reasonCodes={reason_codes}
+              existingApplication={existingApp}
+            />
           </Card>
 
           {/* Drive Details & Criteria Grid */}

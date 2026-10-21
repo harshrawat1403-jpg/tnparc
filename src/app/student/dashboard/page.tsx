@@ -290,6 +290,32 @@ export default async function StudentDashboardPage() {
               </div>
             </Card>
 
+            {/* My Applications Card */}
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-2">
+                <Heading level={3} className="text-base">
+                  My Applications
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Applications
+                </Badge>
+              </div>
+              <p className="text-sm font-medium">Track Status &amp; Timeline</p>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                Monitor your application status transitions, interview rounds,
+                and permanent history.
+              </p>
+
+              <div className="mt-6 pt-3 border-t border-[var(--color-border)]">
+                <Link
+                  href="/student/applications"
+                  className="text-xs text-[var(--color-primary)] hover:underline font-medium"
+                >
+                  View My Applications &rarr;
+                </Link>
+              </div>
+            </Card>
+
             {/* Resume Card */}
             <Card padding="md">
               <div className="flex items-center justify-between mb-2">
