@@ -264,6 +264,32 @@ export default async function StudentDashboardPage() {
               </div>
             </Card>
 
+            {/* Placement & Internship Drives */}
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-2">
+                <Heading level={3} className="text-base">
+                  Placement &amp; Internship Drives
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Drives
+                </Badge>
+              </div>
+              <p className="text-sm font-medium">Explore Opportunities</p>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                Browse published drives, check your authoritative eligibility
+                status, and view criteria.
+              </p>
+
+              <div className="mt-6 pt-3 border-t border-[var(--color-border)]">
+                <Link
+                  href="/student/drives"
+                  className="text-xs text-[var(--color-primary)] hover:underline font-medium"
+                >
+                  View Placement Drives &rarr;
+                </Link>
+              </div>
+            </Card>
+
             {/* Resume Card */}
             <Card padding="md">
               <div className="flex items-center justify-between mb-2">

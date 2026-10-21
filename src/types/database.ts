@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -291,6 +291,27 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_recruiter_granted_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "applications_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_published_drives";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "applications_student_id_fkey";
             columns: ["student_id"];
             isOneToOne: false;
@@ -521,6 +542,27 @@ export type Database = {
             referencedRelation: "placement_drives";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "drive_eligibility_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: true;
+            referencedRelation: "v_recruiter_granted_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "drive_eligibility_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "drive_eligibility_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: true;
+            referencedRelation: "v_student_published_drives";
+            referencedColumns: ["id"];
+          },
         ];
       };
       drive_eligible_batches: {
@@ -552,6 +594,27 @@ export type Database = {
             columns: ["drive_id"];
             isOneToOne: false;
             referencedRelation: "placement_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "drive_eligible_batches_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_recruiter_granted_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "drive_eligible_batches_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "drive_eligible_batches_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_published_drives";
             referencedColumns: ["id"];
           },
           {
@@ -808,6 +871,27 @@ export type Database = {
             columns: ["drive_id"];
             isOneToOne: false;
             referencedRelation: "placement_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_drive_access_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_recruiter_granted_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_drive_access_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_drives";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_drive_access_drive_id_fkey";
+            columns: ["drive_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_published_drives";
             referencedColumns: ["id"];
           },
           {
@@ -1249,6 +1333,110 @@ export type Database = {
       };
     };
     Views: {
+      v_recruiter_granted_drives: {
+        Row: {
+          access_grant_id: string | null;
+          application_deadline: string | null;
+          company_id: string | null;
+          company_name: string | null;
+          company_website: string | null;
+          compensation_details: string | null;
+          description: string | null;
+          drive_type: Database["public"]["Enums"]["drive_type"] | null;
+          expires_at: string | null;
+          granted_at: string | null;
+          id: string | null;
+          is_open: boolean | null;
+          location: string | null;
+          package_lpa: number | null;
+          published_at: string | null;
+          requirements_info: string | null;
+          status: Database["public"]["Enums"]["drive_status"] | null;
+          stipend_monthly: number | null;
+          title: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      v_staff_drives: {
+        Row: {
+          application_deadline: string | null;
+          archived_at: string | null;
+          archived_by: string | null;
+          archived_by_name: string | null;
+          closed_at: string | null;
+          closed_by: string | null;
+          closed_by_name: string | null;
+          company_id: string | null;
+          company_is_archived: boolean | null;
+          company_name: string | null;
+          compensation_details: string | null;
+          created_at: string | null;
+          created_by: string | null;
+          created_by_name: string | null;
+          description: string | null;
+          drive_type: Database["public"]["Enums"]["drive_type"] | null;
+          eligible_batches_count: number | null;
+          id: string | null;
+          location: string | null;
+          package_lpa: number | null;
+          published_at: string | null;
+          published_by: string | null;
+          published_by_name: string | null;
+          recruiter_grants_count: number | null;
+          requirements_info: string | null;
+          status: Database["public"]["Enums"]["drive_status"] | null;
+          stipend_monthly: number | null;
+          title: string | null;
+          updated_at: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "placement_drives_archived_by_fkey";
+            columns: ["archived_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_closed_by_fkey";
+            columns: ["closed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_published_by_fkey";
+            columns: ["published_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       v_staff_recruiter_contacts: {
         Row: {
           bound_profile_id: string | null;
@@ -1335,17 +1523,56 @@ export type Database = {
           },
         ];
       };
+      v_student_published_drives: {
+        Row: {
+          application_deadline: string | null;
+          company_id: string | null;
+          company_name: string | null;
+          company_website: string | null;
+          compensation_details: string | null;
+          description: string | null;
+          drive_type: Database["public"]["Enums"]["drive_type"] | null;
+          id: string | null;
+          is_open: boolean | null;
+          location: string | null;
+          package_lpa: number | null;
+          published_at: string | null;
+          requirements_info: string | null;
+          status: Database["public"]["Enums"]["drive_status"] | null;
+          stipend_monthly: number | null;
+          title: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "placement_drives_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       _coordinator_has_scope_over: {
         Args: { p_student_id: string };
         Returns: boolean;
       };
+      _evaluate_eligibility_for_student: {
+        Args: { p_drive_id: string; p_student_id: string };
+        Returns: {
+          academic_result: string;
+          is_available: boolean;
+          reason_codes: string[];
+        }[];
+      };
       accept_recruiter_invitation: {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
       archive_company: { Args: { p_company_id: string }; Returns: Json };
+      archive_placement_drive: { Args: { p_drive_id: string }; Returns: Json };
       archive_student_skill: {
         Args: { p_student_skill_id: string };
         Returns: Json;
@@ -1387,6 +1614,25 @@ export type Database = {
         Args: { p_proficiency_level: number; p_skill_id: string };
         Returns: Json;
       };
+      close_placement_drive: { Args: { p_drive_id: string }; Returns: Json };
+      company_has_published_drive: {
+        Args: { p_company_id: string };
+        Returns: boolean;
+      };
+      configure_drive_eligibility: {
+        Args: {
+          p_drive_id: string;
+          p_exclude_previously_selected_placement?: boolean;
+          p_informational_requirements?: string;
+          p_maximum_active_backlogs: number;
+          p_minimum_cgpa: number;
+        };
+        Returns: Json;
+      };
+      configure_drive_eligible_batches: {
+        Args: { p_batches: Json; p_drive_id: string };
+        Returns: Json;
+      };
       correct_student_academic_record: {
         Args: {
           p_active_backlogs: number;
@@ -1398,6 +1644,21 @@ export type Database = {
       };
       create_company: {
         Args: { p_description?: string; p_name: string; p_website?: string };
+        Returns: Json;
+      };
+      create_placement_drive: {
+        Args: {
+          p_application_deadline?: string;
+          p_company_id: string;
+          p_compensation_details?: string;
+          p_description?: string;
+          p_drive_type: Database["public"]["Enums"]["drive_type"];
+          p_location?: string;
+          p_package_lpa?: number;
+          p_requirements_info?: string;
+          p_stipend_monthly?: number;
+          p_title: string;
+        };
         Returns: Json;
       };
       create_recruiter_contact: {
@@ -1423,6 +1684,14 @@ export type Database = {
         Returns: Json;
       };
       deactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
+      get_my_drive_eligibility: {
+        Args: { p_drive_id: string };
+        Returns: {
+          academic_result: string;
+          is_available: boolean;
+          reason_codes: string[];
+        }[];
+      };
       get_my_lifecycle: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["student_lifecycle_status"];
@@ -1438,6 +1707,14 @@ export type Database = {
       get_user_role: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["user_role"];
+      };
+      grant_recruiter_drive_access: {
+        Args: {
+          p_drive_id: string;
+          p_expires_at?: string;
+          p_recruiter_profile_id: string;
+        };
+        Returns: Json;
       };
       is_active_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_active_student: { Args: Record<PropertyKey, never>; Returns: boolean };
@@ -1459,12 +1736,17 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      publish_placement_drive: { Args: { p_drive_id: string }; Returns: Json };
       reactivate_company: { Args: { p_company_id: string }; Returns: Json };
       reactivate_recruiter_contact: {
         Args: { p_contact_id: string };
         Returns: Json;
       };
       reactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
+      recruiter_has_granted_drive_for_company: {
+        Args: { p_company_id: string };
+        Returns: boolean;
+      };
       register_skill_evidence_pdf: {
         Args: {
           p_description?: string;
@@ -1492,6 +1774,10 @@ export type Database = {
       };
       resubmit_student_skill: {
         Args: { p_student_skill_id: string };
+        Returns: Json;
+      };
+      revoke_recruiter_drive_access: {
+        Args: { p_access_id: string };
         Returns: Json;
       };
       revoke_recruiter_invitation: {
@@ -1528,6 +1814,20 @@ export type Database = {
           p_portfolio_url?: string;
           p_public_headline?: string;
           p_public_tagline?: string;
+        };
+        Returns: Json;
+      };
+      update_placement_drive: {
+        Args: {
+          p_application_deadline?: string;
+          p_compensation_details?: string;
+          p_description?: string;
+          p_drive_id: string;
+          p_location?: string;
+          p_package_lpa?: number;
+          p_requirements_info?: string;
+          p_stipend_monthly?: number;
+          p_title: string;
         };
         Returns: Json;
       };

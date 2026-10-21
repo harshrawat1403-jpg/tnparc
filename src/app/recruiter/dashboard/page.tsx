@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -305,32 +306,35 @@ export default async function RecruiterDashboardPage() {
               </div>
             </Card>
 
-            {/* Placement Drives Notice (Phase 7) */}
-            <Card padding="lg" className="md:col-span-2 border-dashed">
+            {/* Placement Drives Section (Phase 7) */}
+            <Card padding="lg" className="md:col-span-2">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <Heading level={3} className="text-base font-medium">
-                      Campus Placement Drives & Recruitment
+                      Assigned Placement Drives
                     </Heading>
-                    <Badge variant="warning" size="sm">
-                      Phase 7 Upcoming
+                    <Badge variant="success" size="sm">
+                      Active
                     </Badge>
                   </div>
                   <Text variant="secondary" className="text-sm">
-                    Placement drives will be available in Phase 7.
+                    View authorized placement and internship drives for your
+                    company.
                   </Text>
                   <p className="text-xs text-[var(--color-text-secondary)] mt-2 max-w-3xl leading-relaxed">
-                    In Phase 7, authorized recruiters will be able to submit
-                    placement drive proposals, define job roles and compensation
-                    packages, review verified applicant submissions, and
-                    coordinate recruitment rounds with the Training & Placement
-                    cell.
+                    View job descriptions, compensation details, and eligibility
+                    criteria for published drives where the Training &amp;
+                    Placement Cell has granted your recruiter account access.
                   </p>
                 </div>
 
-                <div className="shrink-0 text-xs px-3 py-2 rounded border border-[var(--color-border)] bg-[var(--color-surface-hover)] font-mono text-[var(--color-text-secondary)]">
-                  Status: Phase 6 Initialized
+                <div className="shrink-0">
+                  <Link href="/recruiter/drives">
+                    <Button variant="primary" size="sm">
+                      View Assigned Drives &rarr;
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Card>

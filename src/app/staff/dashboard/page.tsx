@@ -181,6 +181,27 @@ export default async function StaffDashboardPage() {
             <Card padding="md">
               <div className="flex items-center justify-between mb-1">
                 <Heading level={3} className="text-base">
+                  Placement Drives
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Drives &amp; Eligibility
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Create and manage placement &amp; internship drives, configure
+                authoritative eligibility thresholds, target student cohorts,
+                and grant recruiter access.
+              </Text>
+              <Link href="/staff/drives">
+                <Button variant="primary" size="sm" className="w-full">
+                  Manage Placement Drives →
+                </Button>
+              </Link>
+            </Card>
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
                   Companies Directory
                 </Heading>
                 <Badge variant="default" size="sm">
