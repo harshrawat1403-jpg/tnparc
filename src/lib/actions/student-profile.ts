@@ -337,3 +337,65 @@ export async function getResumeDownloadUrl(
 
   return { url: signedData.signedUrl };
 }
+
+export interface PublicProfileSettingsActionState {
+  error?: string;
+  success?: string;
+  slug?: string | null;
+  publicProfileEnabled?: boolean;
+}
+
+/**
+ * Update Student Public Profile Privacy Settings
+ * Invokes update_own_public_profile_settings procedure with server-side validation.
+ */
+export async function submitUpdatePublicProfileSettings(
+  _prevState: PublicProfileSettingsActionState | null,
+  formData: FormData
+): Promise<PublicProfileSettingsActionState> {
+  const publicProfileEnabled = formData.get("publicProfileEnabled") === "true";
+  const publicResumeEnabled = formData.get("publicResumeEnabled") === "true";
+  const publicPortfolioEnabled =
+    formData.get("publicPortfolioEnabled") === "true";
+  const slug = (formData.get("slug") as string)?.toLowerCase().trim() || null;
+  const publicHeadline =
+    (formData.get("publicHeadline") as string)?.trim() || null;
+  const publicTagline =
+    (formData.get("publicTagline") as string)?.trim() || null;
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc(
+    "update_own_public_profile_settings",
+    {
+      p_public_profile_enabled: publicProfileEnabled,
+      p_public_resume_enabled: publicResumeEnabled,
+      p_public_portfolio_enabled: publicPortfolioEnabled,
+      p_public_profile_slug: slug ?? undefined,
+      p_public_headline: publicHeadline ?? undefined,
+      p_public_tagline: publicTagline ?? undefined,
+    }
+  );
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  const res = data as {
+    success?: boolean;
+    public_profile_enabled?: boolean;
+    public_profile_slug?: string;
+  };
+
+  revalidatePath("/student/profile");
+  revalidatePath("/students");
+  if (res.public_profile_slug) {
+    revalidatePath(`/students/profile/${res.public_profile_slug}`);
+  }
+
+  return {
+    success: "Public profile privacy settings updated successfully.",
+    publicProfileEnabled: res.public_profile_enabled,
+    slug: res.public_profile_slug,
+  };
+}

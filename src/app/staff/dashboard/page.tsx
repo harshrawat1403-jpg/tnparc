@@ -130,11 +130,22 @@ export default async function StaffDashboardPage() {
                 Access student rosters, view detailed professional profiles, and
                 inspect verified academic standing.
               </Text>
-              <Link href="/staff/students">
-                <Button variant="primary" size="sm" className="w-full">
-                  Open Student Directory →
-                </Button>
-              </Link>
+              <div className="flex flex-col gap-2">
+                <Link href="/staff/students">
+                  <Button variant="primary" size="sm" className="w-full">
+                    Open Student Directory →
+                  </Button>
+                </Link>
+                <Link href="/staff/students/public-profiles">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full text-xs"
+                  >
+                    Public Profiles Audit →
+                  </Button>
+                </Link>
+              </div>
             </Card>
 
             <Card padding="md">

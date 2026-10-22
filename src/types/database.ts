@@ -80,6 +80,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "academic_programs_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       academic_records: {
@@ -132,6 +139,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "academic_records_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "academic_records_program_id_fkey";
             columns: ["program_id"];
             isOneToOne: false;
@@ -144,6 +158,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "academic_records_verified_by_fkey";
+            columns: ["verified_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -192,6 +213,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "announcements_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -261,6 +289,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "application_status_history_changed_by_fkey";
+            columns: ["changed_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -338,6 +373,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "applications_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       audit_logs: {
@@ -379,6 +421,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "audit_logs_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -425,6 +474,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "companies_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       coordinator_student_scopes: {
@@ -462,11 +518,25 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "coordinator_student_scopes_coordinator_id_fkey";
+            columns: ["coordinator_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "coordinator_student_scopes_granted_by_fkey";
             columns: ["granted_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "coordinator_student_scopes_granted_by_fkey";
+            columns: ["granted_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
           {
             foreignKeyName: "coordinator_student_scopes_program_id_fkey";
@@ -519,6 +589,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "documents_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -726,11 +803,25 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "placement_drives_archived_by_fkey";
+            columns: ["archived_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "placement_drives_closed_by_fkey";
             columns: ["closed_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_closed_by_fkey";
+            columns: ["closed_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
           {
             foreignKeyName: "placement_drives_company_id_fkey";
@@ -754,11 +845,25 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "placement_drives_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "placement_drives_published_by_fkey";
             columns: ["published_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_published_by_fkey";
+            columns: ["published_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -865,6 +970,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "recruiter_contacts_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       recruiter_drive_access: {
@@ -936,6 +1048,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "recruiter_drive_access_granted_by_fkey";
+            columns: ["granted_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "recruiter_drive_access_recruiter_profile_id_fkey";
             columns: ["recruiter_profile_id"];
             isOneToOne: false;
@@ -955,6 +1074,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_drive_access_revoked_by_fkey";
+            columns: ["revoked_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -1008,6 +1134,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "recruiter_invitations_invited_by_fkey";
+            columns: ["invited_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "recruiter_invitations_recruiter_contact_id_fkey";
             columns: ["recruiter_contact_id"];
             isOneToOne: false;
@@ -1027,6 +1160,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_invitations_revoked_by_fkey";
+            columns: ["revoked_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -1074,6 +1214,13 @@ export type Database = {
             isOneToOne: true;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recruiter_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
           {
             foreignKeyName: "recruiter_profiles_recruiter_contact_id_fkey";
@@ -1130,6 +1277,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "skills_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -1200,6 +1354,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "student_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       student_roster: {
@@ -1247,6 +1408,13 @@ export type Database = {
             isOneToOne: true;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "student_roster_claimed_by_fkey";
+            columns: ["claimed_by"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
           {
             foreignKeyName: "student_roster_program_id_fkey";
@@ -1364,11 +1532,25 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "student_skills_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "student_skills_verified_by_fkey";
             columns: ["verified_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "student_skills_verified_by_fkey";
+            columns: ["verified_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -1459,6 +1641,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "application_status_history_changed_by_fkey";
+            columns: ["changed_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       v_staff_applications: {
@@ -1529,6 +1718,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "applications_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "placement_drives_company_id_fkey";
             columns: ["company_id"];
             isOneToOne: false;
@@ -1586,11 +1782,25 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "placement_drives_archived_by_fkey";
+            columns: ["archived_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "placement_drives_closed_by_fkey";
             columns: ["closed_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_closed_by_fkey";
+            columns: ["closed_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
           {
             foreignKeyName: "placement_drives_company_id_fkey";
@@ -1614,11 +1824,25 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "placement_drives_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "placement_drives_published_by_fkey";
             columns: ["published_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "placement_drives_published_by_fkey";
+            columns: ["published_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
           },
         ];
       };
@@ -1668,6 +1892,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "recruiter_profiles_profile_id_fkey";
+            columns: ["bound_profile_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       v_staff_skill_reviews: {
@@ -1707,13 +1938,49 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "student_skills_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
             foreignKeyName: "student_skills_verified_by_fkey";
             columns: ["verified_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "student_skills_verified_by_fkey";
+            columns: ["verified_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
+      };
+      v_staff_student_public_profiles: {
+        Row: {
+          batch: string | null;
+          has_photo: boolean | null;
+          portfolio_url: string | null;
+          program_code: string | null;
+          program_name: string | null;
+          public_headline: string | null;
+          public_portfolio_enabled: boolean | null;
+          public_profile_enabled: boolean | null;
+          public_profile_slug: string | null;
+          public_resume_enabled: boolean | null;
+          public_tagline: string | null;
+          student_email: string | null;
+          student_id: string | null;
+          student_lifecycle_status:
+            Database["public"]["Enums"]["student_lifecycle_status"] | null;
+          student_name: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
       };
       v_student_application_timeline: {
         Row: {
@@ -1825,6 +2092,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "applications_student_id_fkey";
+            columns: ["student_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
         ];
       };
       v_student_published_drives: {
@@ -1878,8 +2152,24 @@ export type Database = {
           reason_codes: string[];
         }[];
       };
+      _get_public_avatar_storage_path: {
+        Args: { p_slug: string };
+        Returns: string;
+      };
+      _is_student_publicly_eligible: {
+        Args: { p_profile_id: string };
+        Returns: boolean;
+      };
       accept_recruiter_invitation: {
         Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      admin_reassign_profile_slug: {
+        Args: {
+          p_new_slug: string;
+          p_reason: string;
+          p_target_student_id: string;
+        };
         Returns: Json;
       };
       apply_to_drive: { Args: { p_drive_id: string }; Returns: Json };
@@ -2016,6 +2306,59 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["user_role"];
       };
+      get_public_batch_page: {
+        Args: {
+          p_batch: string;
+          p_has_portfolio?: boolean;
+          p_limit?: number;
+          p_offset?: number;
+          p_program_code?: string;
+          p_search?: string;
+          p_skill?: string;
+        };
+        Returns: {
+          graduation_batch: string;
+          has_photo: boolean;
+          headline: string;
+          name: string;
+          portfolio_available: boolean;
+          portfolio_url: string;
+          program_code: string;
+          program_name: string;
+          resume_available: boolean;
+          slug: string;
+          tagline: string;
+          top_skills: Json;
+          total_count: number;
+        }[];
+      };
+      get_public_batches: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          batch: string;
+          program_code: string;
+          program_name: string;
+          student_count: number;
+        }[];
+      };
+      get_public_student_profile: {
+        Args: { p_slug: string };
+        Returns: {
+          graduation_batch: string;
+          has_photo: boolean;
+          headline: string;
+          linkedin_url: string;
+          name: string;
+          portfolio_available: boolean;
+          portfolio_url: string;
+          program_code: string;
+          program_name: string;
+          resume_available: boolean;
+          slug: string;
+          tagline: string;
+          verified_skills: Json;
+        }[];
+      };
       get_student_lifecycle_status: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["student_lifecycle_status"];
@@ -2123,6 +2466,17 @@ export type Database = {
       };
       update_own_profile_photo: {
         Args: { p_storage_path: string };
+        Returns: Json;
+      };
+      update_own_public_profile_settings: {
+        Args: {
+          p_public_headline?: string;
+          p_public_portfolio_enabled: boolean;
+          p_public_profile_enabled: boolean;
+          p_public_profile_slug?: string;
+          p_public_resume_enabled: boolean;
+          p_public_tagline?: string;
+        };
         Returns: Json;
       };
       update_own_student_profile: {

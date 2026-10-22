@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ProfileForm } from "./ProfileForm";
 import { PhotoUpload } from "./PhotoUpload";
+import { PublicProfileSettingsForm } from "./PublicProfileSettingsForm";
 
 export const instant = false;
 
@@ -45,7 +46,7 @@ export default async function StudentProfilePage() {
   const { data: studentProfile } = await supabase
     .from("student_profiles")
     .select(
-      "bio, public_headline, public_tagline, phone, linkedin_url, portfolio_url, other_links, profile_photo_path, profile_completeness"
+      "bio, public_headline, public_tagline, phone, linkedin_url, portfolio_url, other_links, profile_photo_path, profile_completeness, public_profile_enabled, public_resume_enabled, public_portfolio_enabled, public_profile_slug"
     )
     .eq("profile_id", user.id)
     .maybeSingle();
@@ -163,6 +164,30 @@ export default async function StudentProfilePage() {
             <PhotoUpload
               currentPhotoPath={studentProfile?.profile_photo_path || null}
               signedPhotoUrl={signedPhotoUrl}
+            />
+          </Card>
+
+          {/* Public Talent Showcase & Privacy Settings */}
+          <Card padding="lg">
+            <Heading level={3} className="text-base mb-1">
+              Public Talent Directory & Showcase
+            </Heading>
+            <Text variant="secondary" className="text-xs mb-4">
+              Control your public presence on the departmental student directory
+              and recruiter talent listings.
+            </Text>
+            <PublicProfileSettingsForm
+              initialData={{
+                publicProfileEnabled:
+                  studentProfile?.public_profile_enabled || false,
+                publicResumeEnabled:
+                  studentProfile?.public_resume_enabled || false,
+                publicPortfolioEnabled:
+                  studentProfile?.public_portfolio_enabled || false,
+                slug: studentProfile?.public_profile_slug || null,
+                headline: studentProfile?.public_headline || null,
+                tagline: studentProfile?.public_tagline || null,
+              }}
             />
           </Card>
 
