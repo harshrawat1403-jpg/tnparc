@@ -168,6 +168,210 @@ export type Database = {
           },
         ];
       };
+      alumni_employment_history: {
+        Row: {
+          alumni_id: string;
+          city: string | null;
+          company_id: string | null;
+          country: string | null;
+          created_at: string;
+          ended_at: string | null;
+          id: string;
+          notes: string | null;
+          organization: string;
+          professional_domain: string | null;
+          role: string;
+          started_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          alumni_id: string;
+          city?: string | null;
+          company_id?: string | null;
+          country?: string | null;
+          created_at?: string;
+          ended_at?: string | null;
+          id?: string;
+          notes?: string | null;
+          organization: string;
+          professional_domain?: string | null;
+          role: string;
+          started_at: string;
+        };
+        Update: {
+          alumni_id?: string;
+          city?: string | null;
+          company_id?: string | null;
+          country?: string | null;
+          created_at?: string;
+          ended_at?: string | null;
+          id?: string;
+          notes?: string | null;
+          organization?: string;
+          professional_domain?: string | null;
+          role?: string;
+          started_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "alumni_employment_history_alumni_id_fkey";
+            columns: ["alumni_id"];
+            isOneToOne: false;
+            referencedRelation: "alumni_profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_employment_history_alumni_id_fkey";
+            columns: ["alumni_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_alumni_directory";
+            referencedColumns: ["alumni_id"];
+          },
+          {
+            foreignKeyName: "alumni_employment_history_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_employment_history_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
+        ];
+      };
+      alumni_profiles: {
+        Row: {
+          city: string | null;
+          company_id: string | null;
+          consent_recorded_at: string | null;
+          country: string;
+          created_at: string;
+          current_organization: string | null;
+          current_role: string | null;
+          graduation_year: number;
+          higher_studies_institution: string | null;
+          higher_studies_program: string | null;
+          higher_studies_year_start: number | null;
+          id: string;
+          last_verified_at: string | null;
+          last_verified_by: string | null;
+          linkedin_url: string | null;
+          professional_domain: string | null;
+          profile_id: string;
+          program_id: string;
+          public_alumni_enabled: boolean;
+          updated_at: string;
+          willing_to_mentor: boolean;
+          willing_to_refer: boolean;
+          willing_to_support_placement: boolean;
+        };
+        ComputedFields: never;
+        Insert: {
+          city?: string | null;
+          company_id?: string | null;
+          consent_recorded_at?: string | null;
+          country?: string;
+          created_at?: string;
+          current_organization?: string | null;
+          current_role?: string | null;
+          graduation_year: number;
+          higher_studies_institution?: string | null;
+          higher_studies_program?: string | null;
+          higher_studies_year_start?: number | null;
+          id?: string;
+          last_verified_at?: string | null;
+          last_verified_by?: string | null;
+          linkedin_url?: string | null;
+          professional_domain?: string | null;
+          profile_id: string;
+          program_id: string;
+          public_alumni_enabled?: boolean;
+          updated_at?: string;
+          willing_to_mentor?: boolean;
+          willing_to_refer?: boolean;
+          willing_to_support_placement?: boolean;
+        };
+        Update: {
+          city?: string | null;
+          company_id?: string | null;
+          consent_recorded_at?: string | null;
+          country?: string;
+          created_at?: string;
+          current_organization?: string | null;
+          current_role?: string | null;
+          graduation_year?: number;
+          higher_studies_institution?: string | null;
+          higher_studies_program?: string | null;
+          higher_studies_year_start?: number | null;
+          id?: string;
+          last_verified_at?: string | null;
+          last_verified_by?: string | null;
+          linkedin_url?: string | null;
+          professional_domain?: string | null;
+          profile_id?: string;
+          program_id?: string;
+          public_alumni_enabled?: boolean;
+          updated_at?: string;
+          willing_to_mentor?: boolean;
+          willing_to_refer?: boolean;
+          willing_to_support_placement?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "alumni_profiles_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_last_verified_by_fkey";
+            columns: ["last_verified_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_last_verified_by_fkey";
+            columns: ["last_verified_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_program_id_fkey";
+            columns: ["program_id"];
+            isOneToOne: false;
+            referencedRelation: "academic_programs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       announcements: {
         Row: {
           audience: Database["public"]["Enums"]["announcement_audience"];
@@ -1596,6 +1800,159 @@ export type Database = {
           },
         ];
       };
+      v_staff_alumni_directory: {
+        Row: {
+          alumni_id: string | null;
+          city: string | null;
+          company_id: string | null;
+          company_is_archived: boolean | null;
+          company_name: string | null;
+          company_website: string | null;
+          consent_recorded_at: string | null;
+          country: string | null;
+          created_at: string | null;
+          current_employer: string | null;
+          current_organization: string | null;
+          current_role: string | null;
+          graduation_year: number | null;
+          higher_studies_institution: string | null;
+          higher_studies_program: string | null;
+          higher_studies_year_start: number | null;
+          last_verified_at: string | null;
+          last_verified_by: string | null;
+          linkedin_url: string | null;
+          professional_domain: string | null;
+          profile_id: string | null;
+          program_code: string | null;
+          program_id: string | null;
+          program_name: string | null;
+          public_alumni_enabled: boolean | null;
+          student_is_active: boolean | null;
+          student_lifecycle_status:
+            Database["public"]["Enums"]["student_lifecycle_status"] | null;
+          student_name: string | null;
+          updated_at: string | null;
+          willing_to_mentor: boolean | null;
+          willing_to_refer: boolean | null;
+          willing_to_support_placement: boolean | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "alumni_profiles_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_last_verified_by_fkey";
+            columns: ["last_verified_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_last_verified_by_fkey";
+            columns: ["last_verified_by"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_program_id_fkey";
+            columns: ["program_id"];
+            isOneToOne: false;
+            referencedRelation: "academic_programs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      v_staff_alumni_employment_history: {
+        Row: {
+          alumni_id: string | null;
+          city: string | null;
+          company_id: string | null;
+          company_name: string | null;
+          country: string | null;
+          created_at: string | null;
+          employment_id: string | null;
+          ended_at: string | null;
+          notes: string | null;
+          organization: string | null;
+          professional_domain: string | null;
+          profile_id: string | null;
+          role: string | null;
+          started_at: string | null;
+          student_name: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "alumni_employment_history_alumni_id_fkey";
+            columns: ["alumni_id"];
+            isOneToOne: false;
+            referencedRelation: "alumni_profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_employment_history_alumni_id_fkey";
+            columns: ["alumni_id"];
+            isOneToOne: false;
+            referencedRelation: "v_staff_alumni_directory";
+            referencedColumns: ["alumni_id"];
+          },
+          {
+            foreignKeyName: "alumni_employment_history_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_employment_history_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "v_student_applications";
+            referencedColumns: ["company_id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alumni_profiles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: true;
+            referencedRelation: "v_staff_student_public_profiles";
+            referencedColumns: ["student_id"];
+          },
+        ];
+      };
       v_staff_application_history: {
         Row: {
           application_id: string | null;
@@ -2164,6 +2521,20 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      add_own_alumni_employment: {
+        Args: {
+          p_city?: string;
+          p_company_id?: string;
+          p_country?: string;
+          p_ended_at?: string;
+          p_notes?: string;
+          p_organization: string;
+          p_professional_domain?: string;
+          p_role: string;
+          p_started_at: string;
+        };
+        Returns: Json;
+      };
       admin_reassign_profile_slug: {
         Args: {
           p_new_slug: string;
@@ -2233,6 +2604,20 @@ export type Database = {
       };
       configure_drive_eligible_batches: {
         Args: { p_batches: Json; p_drive_id: string };
+        Returns: Json;
+      };
+      convert_student_to_alumni: {
+        Args: {
+          p_city?: string;
+          p_company_id?: string;
+          p_country?: string;
+          p_current_organization?: string;
+          p_current_role?: string;
+          p_linkedin_url?: string;
+          p_professional_domain?: string;
+          p_reason?: string;
+          p_student_id: string;
+        };
         Returns: Json;
       };
       correct_student_academic_record: {
@@ -2306,6 +2691,27 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["user_role"];
       };
+      get_public_alumni_directory: {
+        Args: {
+          p_graduation_year?: number;
+          p_limit?: number;
+          p_offset?: number;
+          p_program_code?: string;
+          p_search?: string;
+        };
+        Returns: {
+          city: string;
+          country: string;
+          current_employer: string;
+          designation: string;
+          graduation_year: number;
+          name: string;
+          professional_domain: string;
+          program_code: string;
+          program_name: string;
+          total_count: number;
+        }[];
+      };
       get_public_batch_page: {
         Args: {
           p_batch: string;
@@ -2359,6 +2765,46 @@ export type Database = {
           verified_skills: Json;
         }[];
       };
+      get_staff_alumni_analytics: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      get_staff_alumni_by_company: {
+        Args: { p_limit?: number; p_offset?: number };
+        Returns: {
+          alumni_count: number;
+          company_id: string;
+          company_name: string;
+          is_canonical: boolean;
+        }[];
+      };
+      get_staff_alumni_by_year: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          alumni_count: number;
+          graduation_year: number;
+        }[];
+      };
+      get_staff_alumni_outreach_candidates: {
+        Args: { p_limit?: number; p_offset?: number; p_preference?: string };
+        Returns: {
+          alumni_id: string;
+          city: string;
+          country: string;
+          current_employer: string;
+          designation: string;
+          graduation_year: number;
+          linkedin_url: string;
+          name: string;
+          profile_id: string;
+          program_code: string;
+          program_name: string;
+          total_count: number;
+          willing_to_mentor: boolean;
+          willing_to_refer: boolean;
+          willing_to_support_placement: boolean;
+        }[];
+      };
       get_student_lifecycle_status: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["student_lifecycle_status"];
@@ -2375,6 +2821,7 @@ export type Database = {
         };
         Returns: Json;
       };
+      is_active_alumni: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_active_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_active_student: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_admin_or_secretary: {
@@ -2389,6 +2836,14 @@ export type Database = {
       is_super_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       mark_invitation_delivery_confirmed: {
         Args: { p_invitation_id: string };
+        Returns: Json;
+      };
+      mark_student_graduated: {
+        Args: { p_reason: string; p_student_id: string };
+        Returns: Json;
+      };
+      match_alumni_company: {
+        Args: { p_alumni_id: string; p_company_id: string; p_reason: string };
         Returns: Json;
       };
       provision_student_account: {
@@ -2464,6 +2919,25 @@ export type Database = {
         };
         Returns: Json;
       };
+      update_own_alumni_profile: {
+        Args: {
+          p_city?: string;
+          p_company_id?: string;
+          p_country?: string;
+          p_current_organization?: string;
+          p_current_role?: string;
+          p_higher_studies_institution?: string;
+          p_higher_studies_program?: string;
+          p_higher_studies_year_start?: number;
+          p_linkedin_url?: string;
+          p_professional_domain?: string;
+          p_public_alumni_enabled?: boolean;
+          p_willing_to_mentor?: boolean;
+          p_willing_to_refer?: boolean;
+          p_willing_to_support_placement?: boolean;
+        };
+        Returns: Json;
+      };
       update_own_profile_photo: {
         Args: { p_storage_path: string };
         Returns: Json;
@@ -2527,6 +3001,7 @@ export type Database = {
         Args: { p_proficiency_level: number; p_student_skill_id: string };
         Returns: Json;
       };
+      verify_alumni_profile: { Args: { p_alumni_id: string }; Returns: Json };
       verify_student_academic_record: {
         Args: {
           p_active_backlogs: number;

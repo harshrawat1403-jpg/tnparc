@@ -292,6 +292,37 @@ export default async function StaffDashboardPage() {
                 </Button>
               </Link>
             </Card>
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
+                  Alumni &amp; Industry
+                </Heading>
+                <Badge variant="default" size="sm">
+                  Alumni
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Manage student graduation lifecycles, atomic alumni transitions,
+                corporate partner matching, and alumni directory verifications.
+              </Text>
+              <div className="flex flex-col gap-2">
+                <Link href="/staff/alumni">
+                  <Button variant="primary" size="sm" className="w-full">
+                    Alumni Directory &amp; Analytics →
+                  </Button>
+                </Link>
+                <Link href="/staff/alumni/graduation">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full text-xs"
+                  >
+                    Graduation &amp; Transition Portal →
+                  </Button>
+                </Link>
+              </div>
+            </Card>
           </div>
         </div>
       </Container>
