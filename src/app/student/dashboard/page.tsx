@@ -396,6 +396,31 @@ export default async function StudentDashboardPage() {
                 </Link>
               </div>
             </Card>
+
+            {/* Announcements Card */}
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-2">
+                <Heading level={3} className="text-base">
+                  Department Notices
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Announcements
+                </Badge>
+              </div>
+              <p className="text-sm font-medium">Placement Bulletins</p>
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                View campus recruitment circulars, deadlines, and drive updates.
+              </p>
+
+              <div className="mt-6 pt-3 border-t border-[var(--color-border)]">
+                <Link
+                  href="/student/announcements"
+                  className="text-xs text-[var(--color-primary)] hover:underline font-medium"
+                >
+                  View Announcements &rarr;
+                </Link>
+              </div>
+            </Card>
           </div>
         </div>
       </Container>

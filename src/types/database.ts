@@ -2544,6 +2544,10 @@ export type Database = {
         Returns: Json;
       };
       apply_to_drive: { Args: { p_drive_id: string }; Returns: Json };
+      archive_announcement: {
+        Args: { p_announcement_id: string };
+        Returns: Json;
+      };
       archive_company: { Args: { p_company_id: string }; Returns: Json };
       archive_placement_drive: { Args: { p_drive_id: string }; Returns: Json };
       archive_student_skill: {
@@ -2581,6 +2585,15 @@ export type Database = {
       };
       can_student_access_own_skill_evidence: {
         Args: { p_object_name: string };
+        Returns: boolean;
+      };
+      can_view_announcement: {
+        Args: {
+          p_audience: Database["public"]["Enums"]["announcement_audience"];
+          p_expires_at: string;
+          p_published_at: string;
+          p_status: Database["public"]["Enums"]["announcement_status"];
+        };
         Returns: boolean;
       };
       claim_student_skill: {
@@ -2633,6 +2646,15 @@ export type Database = {
         Args: { p_application_id: string; p_reason: string };
         Returns: Json;
       };
+      create_announcement: {
+        Args: {
+          p_audience?: Database["public"]["Enums"]["announcement_audience"];
+          p_body: string;
+          p_expires_at?: string;
+          p_title: string;
+        };
+        Returns: string;
+      };
       create_company: {
         Args: { p_description?: string; p_name: string; p_website?: string };
         Returns: Json;
@@ -2675,6 +2697,17 @@ export type Database = {
         Returns: Json;
       };
       deactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
+      get_my_announcements: {
+        Args: { p_limit?: number; p_offset?: number };
+        Returns: {
+          audience: Database["public"]["Enums"]["announcement_audience"];
+          body: string;
+          expires_at: string;
+          id: string;
+          published_at: string;
+          title: string;
+        }[];
+      };
       get_my_drive_eligibility: {
         Args: { p_drive_id: string };
         Returns: {
@@ -2805,6 +2838,27 @@ export type Database = {
           willing_to_support_placement: boolean;
         }[];
       };
+      get_staff_announcements: {
+        Args: {
+          p_audience?: Database["public"]["Enums"]["announcement_audience"];
+          p_limit?: number;
+          p_offset?: number;
+          p_status?: Database["public"]["Enums"]["announcement_status"];
+        };
+        Returns: {
+          audience: Database["public"]["Enums"]["announcement_audience"];
+          body: string;
+          created_at: string;
+          created_by: string;
+          creator_name: string;
+          expires_at: string;
+          id: string;
+          published_at: string;
+          status: Database["public"]["Enums"]["announcement_status"];
+          title: string;
+          updated_at: string;
+        }[];
+      };
       get_student_lifecycle_status: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["student_lifecycle_status"];
@@ -2848,6 +2902,10 @@ export type Database = {
       };
       provision_student_account: {
         Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      publish_announcement: {
+        Args: { p_announcement_id: string };
         Returns: Json;
       };
       publish_placement_drive: { Args: { p_drive_id: string }; Returns: Json };
@@ -2916,6 +2974,16 @@ export type Database = {
           p_description?: string;
           p_name: string;
           p_website?: string;
+        };
+        Returns: Json;
+      };
+      update_draft_announcement: {
+        Args: {
+          p_announcement_id: string;
+          p_audience: Database["public"]["Enums"]["announcement_audience"];
+          p_body: string;
+          p_expires_at?: string;
+          p_title: string;
         };
         Returns: Json;
       };

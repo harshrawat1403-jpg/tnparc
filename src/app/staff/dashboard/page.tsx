@@ -323,6 +323,33 @@ export default async function StaffDashboardPage() {
                 </Link>
               </div>
             </Card>
+
+            <Card padding="md">
+              <div className="flex items-center justify-between mb-1">
+                <Heading level={3} className="text-base">
+                  Announcements
+                </Heading>
+                <Badge variant="info" size="sm">
+                  Broadcasts
+                </Badge>
+              </div>
+              <Text variant="secondary" className="text-xs mb-4">
+                Official institutional bulletins, campus-wide notifications, and
+                staff directives.
+              </Text>
+              {["SUPER_ADMIN", "TNP_SECRETARY"].includes(profile.role) ? (
+                <Link href="/staff/announcements">
+                  <Button variant="primary" size="sm" className="w-full">
+                    Manage Announcements →
+                  </Button>
+                </Link>
+              ) : (
+                <div className="p-2.5 rounded bg-neutral-50 border border-neutral-200 text-xs text-neutral-600">
+                  Broadcasts are authored and published by Super Admin and TNP
+                  Secretary.
+                </div>
+              )}
+            </Card>
           </div>
         </div>
       </Container>

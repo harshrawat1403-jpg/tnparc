@@ -338,6 +338,38 @@ export default async function RecruiterDashboardPage() {
                 </div>
               </div>
             </Card>
+
+            {/* Announcements Section (Phase 11) */}
+            <Card padding="lg" className="md:col-span-2">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Heading level={3} className="text-base font-medium">
+                      Industry Partner Notices
+                    </Heading>
+                    <Badge variant="info" size="sm">
+                      Announcements
+                    </Badge>
+                  </div>
+                  <Text variant="secondary" className="text-sm">
+                    Official announcements, placement guidelines, and policy
+                    circulars.
+                  </Text>
+                  <p className="text-xs text-[var(--color-text-secondary)] mt-2 max-w-3xl leading-relaxed">
+                    Access institutional updates broadcast to recruiters and
+                    campus partners by the Training &amp; Placement Cell.
+                  </p>
+                </div>
+
+                <div className="shrink-0">
+                  <Link href="/recruiter/announcements">
+                    <Button variant="secondary" size="sm">
+                      View Notices &rarr;
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </Container>
