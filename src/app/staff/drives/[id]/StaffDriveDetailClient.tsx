@@ -11,6 +11,7 @@ import {
   submitArchiveDrive,
   submitGrantRecruiterAccess,
   submitRevokeRecruiterAccess,
+  submitCorrectPublishedDrive,
 } from "@/lib/actions/drives";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -19,6 +20,7 @@ import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { Badge } from "@/components/ui/Badge";
 import { Text } from "@/components/ui/Text";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 interface AcademicProgramRecord {
   id: string;
@@ -147,6 +149,37 @@ export function StaffDriveDetailClient({
   const [selectedRecruiter, setSelectedRecruiter] = useState<string>("");
   const [grantExpiresAt, setGrantExpiresAt] = useState<string>("");
   const [now] = useState(() => Date.now());
+  const [confirmAction, setConfirmAction] = useState<
+    "publish" | "close" | "archive" | { type: "revoke"; grantId: string } | null
+  >(null);
+
+  // Audited published drive correction state
+  const [isCorrectDialogOpen, setIsCorrectDialogOpen] = useState(false);
+  const [correctReason, setCorrectReason] = useState("");
+  const [correctTitle, setCorrectTitle] = useState(drive.title);
+  const [correctDeadline, setCorrectDeadline] = useState(
+    drive.application_deadline ? drive.application_deadline.slice(0, 16) : ""
+  );
+  const [correctDescription, setCorrectDescription] = useState(
+    drive.description || ""
+  );
+  const [correctLocation, setCorrectLocation] = useState(drive.location || "");
+  const [correctPackage, setCorrectPackage] = useState(
+    drive.package_lpa !== null && drive.package_lpa !== undefined
+      ? drive.package_lpa.toString()
+      : ""
+  );
+  const [correctStipend, setCorrectStipend] = useState(
+    drive.stipend_monthly !== null && drive.stipend_monthly !== undefined
+      ? drive.stipend_monthly.toString()
+      : ""
+  );
+  const [correctCompensation, setCorrectCompensation] = useState(
+    drive.compensation_details || ""
+  );
+  const [correctRequirements, setCorrectRequirements] = useState(
+    drive.requirements_info || ""
+  );
 
   const isDraft = drive.status === "DRAFT";
   const isPublished = drive.status === "PUBLISHED";
@@ -193,6 +226,38 @@ export function StaffDriveDetailClient({
         setErrorMsg(res.error);
       } else {
         setSuccessMsg(res.success || "Drive archived successfully.");
+        router.refresh();
+      }
+    });
+  }
+
+  function handleCorrectPublishedDrive() {
+    if (!correctReason.trim() || correctReason.trim().length < 5) {
+      setErrorMsg(
+        "A detailed correction reason (min 5 characters) is required."
+      );
+      return;
+    }
+    clearMessages();
+    startTransition(async () => {
+      const res = await submitCorrectPublishedDrive(drive.id, correctReason, {
+        title: correctTitle,
+        description: correctDescription,
+        location: correctLocation,
+        applicationDeadline: correctDeadline
+          ? new Date(correctDeadline).toISOString()
+          : undefined,
+        packageLpa: correctPackage ? parseFloat(correctPackage) : undefined,
+        stipendMonthly: correctStipend ? parseFloat(correctStipend) : undefined,
+        compensationDetails: correctCompensation,
+        requirementsInfo: correctRequirements,
+      });
+
+      if (res.error) {
+        setErrorMsg(res.error);
+      } else {
+        setSuccessMsg(res.success || "Published drive corrected successfully.");
+        setIsCorrectDialogOpen(false);
         router.refresh();
       }
     });
@@ -372,7 +437,7 @@ export function StaffDriveDetailClient({
             {canPublishOrClose && isDraft && (
               <Button
                 variant="primary"
-                onClick={handlePublish}
+                onClick={() => setConfirmAction("publish")}
                 disabled={isPending}
               >
                 {isPending ? "Publishing..." : "Publish Drive"}
@@ -380,19 +445,28 @@ export function StaffDriveDetailClient({
             )}
 
             {canPublishOrClose && isPublished && (
-              <Button
-                variant="secondary"
-                onClick={handleClose}
-                disabled={isPending}
-              >
-                {isPending ? "Closing..." : "Close Drive"}
-              </Button>
+              <>
+                <Button
+                  variant="secondary"
+                  onClick={() => setIsCorrectDialogOpen(true)}
+                  disabled={isPending}
+                >
+                  Correct Published Drive
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => setConfirmAction("close")}
+                  disabled={isPending}
+                >
+                  {isPending ? "Closing..." : "Close Drive"}
+                </Button>
+              </>
             )}
 
             {canPublishOrClose && isClosed && (
               <Button
                 variant="destructive"
-                onClick={handleArchive}
+                onClick={() => setConfirmAction("archive")}
                 disabled={isPending}
               >
                 {isPending ? "Archiving..." : "Archive Drive"}
@@ -407,6 +481,189 @@ export function StaffDriveDetailClient({
           </div>
         </div>
       </Card>
+
+      <ConfirmationDialog
+        isOpen={confirmAction !== null}
+        title={
+          confirmAction === "publish"
+            ? "Confirm Drive Publication"
+            : confirmAction === "close"
+              ? "Confirm Drive Closure"
+              : confirmAction === "archive"
+                ? "Confirm Drive Archival"
+                : "Confirm Revoke Recruiter Access"
+        }
+        description={
+          confirmAction === "publish"
+            ? "Publishing this drive makes it immediately visible to all eligible students and begins accepting applications. Core eligibility parameters cannot be reduced afterwards."
+            : confirmAction === "close"
+              ? "Closing this drive prevents new student applications from being submitted. Existing applications will remain for processing."
+              : confirmAction === "archive"
+                ? "Archiving this drive is permanent. All application workflows will be frozen and no further modifications will be allowed."
+                : "Are you sure you want to revoke this recruiter's drive access immediately? They will no longer be able to view applicants."
+        }
+        variant={
+          confirmAction === "publish"
+            ? "primary"
+            : confirmAction === "close"
+              ? "warning"
+              : "danger"
+        }
+        confirmLabel={
+          confirmAction === "publish"
+            ? "Publish Drive"
+            : confirmAction === "close"
+              ? "Close Drive"
+              : confirmAction === "archive"
+                ? "Archive Drive Permanently"
+                : "Revoke Access"
+        }
+        cancelLabel="Cancel"
+        isPending={isPending}
+        onConfirm={() => {
+          if (!confirmAction) return;
+          if (confirmAction === "publish") {
+            setConfirmAction(null);
+            handlePublish();
+          } else if (confirmAction === "close") {
+            setConfirmAction(null);
+            handleClose();
+          } else if (confirmAction === "archive") {
+            setConfirmAction(null);
+            handleArchive();
+          } else if (
+            typeof confirmAction === "object" &&
+            confirmAction.type === "revoke"
+          ) {
+            const gid = confirmAction.grantId;
+            setConfirmAction(null);
+            handleRevokeAccess(gid);
+          }
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
+
+      <ConfirmationDialog
+        isOpen={isCorrectDialogOpen}
+        title="Correct Published Drive"
+        description="This performs an audited administrative correction to an active, published drive. Company and drive type remain immutable. Existing student applications, eligibility checks, and evaluation history are preserved. A detailed audit reason is mandatory."
+        confirmLabel="Apply Audited Correction"
+        cancelLabel="Cancel"
+        variant="warning"
+        isPending={isPending}
+        onConfirm={handleCorrectPublishedDrive}
+        onCancel={() => setIsCorrectDialogOpen(false)}
+      >
+        <div className="space-y-3 mt-3 text-left">
+          <div>
+            <label className="block text-xs font-medium text-neutral-700 mb-1">
+              Correction Audit Reason (Mandatory, min 5 chars)
+            </label>
+            <Textarea
+              value={correctReason}
+              onChange={(e) => setCorrectReason(e.target.value)}
+              placeholder="State why this published drive is being corrected (e.g., Extended deadline per recruiter request)..."
+              rows={2}
+              className="text-xs"
+              required
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Drive Title
+              </label>
+              <Input
+                value={correctTitle}
+                onChange={(e) => setCorrectTitle(e.target.value)}
+                className="text-xs"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Application Deadline
+              </label>
+              <Input
+                type="datetime-local"
+                value={correctDeadline}
+                onChange={(e) => setCorrectDeadline(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Location
+              </label>
+              <Input
+                value={correctLocation}
+                onChange={(e) => setCorrectLocation(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Package LPA
+              </label>
+              <Input
+                type="number"
+                step="0.01"
+                value={correctPackage}
+                onChange={(e) => setCorrectPackage(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-neutral-700 mb-1">
+              Role Description
+            </label>
+            <Textarea
+              value={correctDescription}
+              onChange={(e) => setCorrectDescription(e.target.value)}
+              rows={2}
+              className="text-xs"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Stipend Monthly
+              </label>
+              <Input
+                type="number"
+                step="0.01"
+                value={correctStipend}
+                onChange={(e) => setCorrectStipend(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-neutral-700 mb-1">
+                Compensation Details
+              </label>
+              <Input
+                value={correctCompensation}
+                onChange={(e) => setCorrectCompensation(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-neutral-700 mb-1">
+              Requirements Info
+            </label>
+            <Textarea
+              value={correctRequirements}
+              onChange={(e) => setCorrectRequirements(e.target.value)}
+              rows={2}
+              className="text-xs"
+            />
+          </div>
+        </div>
+      </ConfirmationDialog>
 
       {/* Tab Navigation */}
       <div className="flex items-center gap-2 border-b border-[var(--color-border)]">
@@ -982,7 +1239,12 @@ export function StaffDriveDetailClient({
                             type="button"
                             variant="destructive"
                             size="sm"
-                            onClick={() => handleRevokeAccess(grant.id)}
+                            onClick={() =>
+                              setConfirmAction({
+                                type: "revoke",
+                                grantId: grant.id,
+                              })
+                            }
                             disabled={isPending}
                           >
                             Revoke Access

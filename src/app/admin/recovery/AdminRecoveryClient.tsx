@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import {
   correctTerminalStatusAction,
   type ApplicationStatus,
@@ -106,71 +107,39 @@ export function AdminRecoveryClient({
         </div>
       )}
 
-      {/* Modal / Active Correction Form */}
-      {selectedApp && (
-        <Card className="p-6 border-red-300 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <h3 className="text-base font-bold text-red-900 dark:text-red-200">
-                Execute Terminal Correction: {selectedApp.student_name}
-              </h3>
-              <p className="text-xs text-red-700 dark:text-red-300">
-                Application for {selectedApp.drive_title} (
-                {selectedApp.company_name}) &bull; Current Status:{" "}
-                {selectedApp.application_status}
-              </p>
-            </div>
-            <Badge variant="danger">Super Admin Override</Badge>
-          </div>
-
-          <p className="text-xs text-[var(--color-text-secondary)] mb-4 leading-relaxed">
-            Per system invariants, terminal correction derives the immediate
-            prior non-terminal status from the permanent append-only ledger and
-            restores it atomically with an immutable audit trail entry (
-            <code className="text-xs bg-red-100 dark:bg-red-900 px-1 py-0.5 rounded">
-              is_terminal_correction = true
-            </code>
-            ).
-          </p>
-
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-[var(--color-text)] mb-1">
-              Mandatory Justification Reason *
-            </label>
-            <textarea
-              value={correctionReason}
-              onChange={(e) => setCorrectionReason(e.target.value)}
-              placeholder="e.g. Company rescinded placement offer due to procedural discrepancy; restoring candidate to interview standing..."
-              className="w-full text-xs p-2.5 rounded border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)]"
-              rows={3}
-            />
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleExecuteCorrection}
-              disabled={isPending || !correctionReason.trim()}
-            >
-              {isPending
-                ? "Applying Correction..."
-                : "Confirm & Restore Prior Status"}
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                setSelectedApp(null);
-                setCorrectionReason("");
-              }}
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
-          </div>
-        </Card>
-      )}
+      {/* Confirmation Dialog for Terminal Correction */}
+      <ConfirmationDialog
+        isOpen={selectedApp !== null}
+        title={`Execute Terminal Correction: ${selectedApp?.student_name ?? ""}`}
+        description={`Application for ${selectedApp?.drive_title ?? ""} (${selectedApp?.company_name ?? ""}) • Current Status: ${selectedApp?.application_status ?? ""}. Per system invariants, terminal correction derives the immediate prior non-terminal status from the permanent append-only ledger and restores it atomically with an immutable audit trail entry.`}
+        variant="danger"
+        confirmLabel="Confirm & Restore Prior Status"
+        cancelLabel="Cancel"
+        isPending={isPending}
+        onConfirm={handleExecuteCorrection}
+        onCancel={() => {
+          setSelectedApp(null);
+          setCorrectionReason("");
+        }}
+      >
+        <div>
+          <label
+            htmlFor="recovery-reason"
+            className="block text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1"
+          >
+            Mandatory Justification Reason *
+          </label>
+          <textarea
+            id="recovery-reason"
+            value={correctionReason}
+            onChange={(e) => setCorrectionReason(e.target.value)}
+            placeholder="e.g. Company rescinded placement offer due to procedural discrepancy; restoring candidate to interview standing..."
+            className="w-full text-xs p-2.5 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+            rows={3}
+            disabled={isPending}
+          />
+        </div>
+      </ConfirmationDialog>
 
       {/* Filter Toolbar */}
       <Card className="p-4">

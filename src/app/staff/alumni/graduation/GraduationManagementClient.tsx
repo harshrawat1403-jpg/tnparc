@@ -6,6 +6,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import {
   markStudentGraduatedAction,
   convertStudentToAlumniAction,
@@ -62,7 +63,10 @@ export function GraduationManagementClient({
     "Student completed degree requirements and transitioned to alumni"
   );
 
-  const handleMarkGraduated = (e: React.FormEvent) => {
+  type GradConfirmState = "graduate" | "convert_alumni" | null;
+  const [confirmModal, setConfirmModal] = useState<GradConfirmState>(null);
+
+  const handleMarkGraduatedSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStatusMsg(null);
 
@@ -73,7 +77,10 @@ export function GraduationManagementClient({
       });
       return;
     }
+    setConfirmModal("graduate");
+  };
 
+  const executeMarkGraduated = () => {
     startTransition(async () => {
       const res = await markStudentGraduatedAction(gradStudentId, gradReason);
       if (res.error) {
@@ -89,7 +96,7 @@ export function GraduationManagementClient({
     });
   };
 
-  const handleConvertToAlumni = (e: React.FormEvent) => {
+  const handleConvertToAlumniSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStatusMsg(null);
 
@@ -100,7 +107,10 @@ export function GraduationManagementClient({
       });
       return;
     }
+    setConfirmModal("convert_alumni");
+  };
 
+  const executeConvertToAlumni = () => {
     startTransition(async () => {
       const res = await convertStudentToAlumniAction(alumniStudentId, {
         companyId: matchType === "matched" ? alumniCompanyId || null : null,
@@ -149,7 +159,7 @@ export function GraduationManagementClient({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Workflow 1: Mark Active Student Graduated */}
         <Card padding="lg" className="border flex flex-col justify-between">
-          <form onSubmit={handleMarkGraduated} className="space-y-4">
+          <form onSubmit={handleMarkGraduatedSubmit} className="space-y-4">
             <div className="border-b pb-3">
               <Badge variant="default" size="sm" className="mb-2">
                 Step 1: Graduation
@@ -226,7 +236,7 @@ export function GraduationManagementClient({
 
         {/* Workflow 2: Convert Graduated Student to Alumni */}
         <Card padding="lg" className="border flex flex-col justify-between">
-          <form onSubmit={handleConvertToAlumni} className="space-y-4">
+          <form onSubmit={handleConvertToAlumniSubmit} className="space-y-4">
             <div className="border-b pb-3">
               <Badge variant="default" size="sm" className="mb-2">
                 Step 2: Alumni Transition
@@ -425,6 +435,38 @@ export function GraduationManagementClient({
           </form>
         </Card>
       </div>
+
+      {/* Accessible Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmModal !== null}
+        title={
+          confirmModal === "graduate"
+            ? "Confirm Student Graduation"
+            : "Confirm Alumni Conversion"
+        }
+        description={
+          confirmModal === "graduate"
+            ? "Marking this student as GRADUATED will freeze active placement drive participation. Are you sure you wish to proceed?"
+            : "This action authoritatively transitions the student profile to the alumni directory and provisions institutional alumni access."
+        }
+        variant={confirmModal === "graduate" ? "warning" : "primary"}
+        confirmLabel={
+          confirmModal === "graduate" ? "Mark Graduated" : "Convert to Alumni"
+        }
+        cancelLabel="Cancel"
+        isPending={isPending}
+        onConfirm={() => {
+          if (!confirmModal) return;
+          const action = confirmModal;
+          setConfirmModal(null);
+          if (action === "graduate") {
+            executeMarkGraduated();
+          } else if (action === "convert_alumni") {
+            executeConvertToAlumni();
+          }
+        }}
+        onCancel={() => setConfirmModal(null)}
+      />
     </div>
   );
 }

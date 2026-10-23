@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState, useState } from "react";
+import React, { useActionState, useState, startTransition } from "react";
 import {
   submitAssignRole,
   submitRemoveStaffRole,
@@ -8,6 +8,7 @@ import {
 } from "@/lib/actions/roles";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 interface StaffProfile {
   id: string;
@@ -33,6 +34,9 @@ export function RolesForm({ staffProfiles }: RolesFormProps) {
   >(submitRemoveStaffRole, {});
 
   const [selectedRole, setSelectedRole] = useState<string>("TNP_COORDINATOR");
+  const [revokingProfile, setRevokingProfile] = useState<StaffProfile | null>(
+    null
+  );
 
   return (
     <div className="space-y-8">
@@ -164,22 +168,16 @@ export function RolesForm({ staffProfiles }: RolesFormProps) {
                   </td>
                   <td className="py-2 text-right">
                     {p.role !== "SUPER_ADMIN" && (
-                      <form action={removeAction} className="inline">
-                        <input
-                          type="hidden"
-                          name="targetProfileId"
-                          value={p.id}
-                        />
-                        <Button
-                          type="submit"
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700 text-xs py-0.5 px-1.5"
-                          disabled={isRemovePending}
-                        >
-                          Revoke
-                        </Button>
-                      </form>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700 text-xs py-0.5 px-1.5"
+                        disabled={isRemovePending}
+                        onClick={() => setRevokingProfile(p)}
+                      >
+                        Revoke
+                      </Button>
                     )}
                   </td>
                 </tr>
@@ -188,6 +186,28 @@ export function RolesForm({ staffProfiles }: RolesFormProps) {
           </table>
         </div>
       </div>
+
+      {/* Accessible Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={revokingProfile !== null}
+        title={`Revoke Role: ${revokingProfile?.display_name}`}
+        description={`Are you sure you want to revoke the ${revokingProfile?.role} role from ${revokingProfile?.display_name}? They will immediately lose staff portal privileges and permissions.`}
+        variant="danger"
+        confirmLabel="Revoke Role"
+        cancelLabel="Cancel"
+        isPending={isRemovePending}
+        onConfirm={() => {
+          if (!revokingProfile) return;
+          const targetId = revokingProfile.id;
+          setRevokingProfile(null);
+          const fd = new FormData();
+          fd.set("targetProfileId", targetId);
+          startTransition(() => {
+            removeAction(fd);
+          });
+        }}
+        onCancel={() => setRevokingProfile(null)}
+      />
     </div>
   );
 }

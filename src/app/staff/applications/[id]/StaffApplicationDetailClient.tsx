@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import {
   transitionApplicationStatusAction,
   correctTerminalStatusAction,
@@ -50,6 +51,8 @@ export function StaffApplicationDetailClient({
   // Terminal correction state
   const [correctionReason, setCorrectionReason] = useState("");
   const [showCorrectionModal, setShowCorrectionModal] = useState(false);
+  const [pendingTerminalTransition, setPendingTerminalTransition] =
+    useState<ApplicationStatus | null>(null);
 
   const isTerminal = ["SELECTED", "REJECTED", "WITHDRAWN"].includes(
     currentStatus
@@ -174,59 +177,45 @@ export function StaffApplicationDetailClient({
                     </p>
                   </div>
 
-                  {!showCorrectionModal && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => setShowCorrectionModal(true)}
-                      disabled={isPending}
-                    >
-                      Correct Terminal Status
-                    </Button>
-                  )}
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setShowCorrectionModal(true)}
+                    disabled={isPending}
+                  >
+                    Correct Terminal Status
+                  </Button>
                 </div>
 
-                {showCorrectionModal && (
-                  <div className="mt-4 pt-4 border-t border-red-200 dark:border-red-900 flex flex-col gap-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-red-900 dark:text-red-200 mb-1">
-                        Mandatory Correction Reason &amp; Procedural
-                        Justification *
-                      </label>
-                      <textarea
-                        value={correctionReason}
-                        onChange={(e) => setCorrectionReason(e.target.value)}
-                        placeholder="Explain why this terminal status is being corrected (e.g. Company rescinded offer due to procedural error, candidate withdrew mistakenly)..."
-                        className="w-full text-xs p-2 rounded border border-red-300 dark:border-red-800 bg-[var(--color-bg)] text-[var(--color-text)]"
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={handleTerminalCorrection}
-                        disabled={isPending || !correctionReason.trim()}
-                      >
-                        {isPending
-                          ? "Applying Correction..."
-                          : "Execute Authoritative Correction"}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                          setShowCorrectionModal(false);
-                          setCorrectionReason("");
-                        }}
-                        disabled={isPending}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
+                <ConfirmationDialog
+                  isOpen={showCorrectionModal}
+                  title="Authoritative Terminal Status Correction"
+                  description="This high-impact action authoritatively rolls back the terminal application status to its immediate prior non-terminal state based on the append-only ledger. A detailed procedural reason is mandatory."
+                  variant="danger"
+                  confirmLabel="Execute Authoritative Correction"
+                  cancelLabel="Cancel"
+                  isPending={isPending}
+                  onConfirm={handleTerminalCorrection}
+                  onCancel={() => {
+                    setShowCorrectionModal(false);
+                    setCorrectionReason("");
+                  }}
+                >
+                  <div>
+                    <label className="block text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+                      Mandatory Correction Reason &amp; Procedural Justification
+                      *
+                    </label>
+                    <textarea
+                      value={correctionReason}
+                      onChange={(e) => setCorrectionReason(e.target.value)}
+                      placeholder="Explain why this terminal status is being corrected (e.g. Company rescinded offer due to procedural error, candidate withdrew mistakenly)..."
+                      className="w-full text-xs p-2 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                      rows={3}
+                      disabled={isPending}
+                    />
                   </div>
-                )}
+                </ConfirmationDialog>
               </div>
             )}
           </div>
@@ -250,7 +239,13 @@ export function StaffApplicationDetailClient({
                     key={target}
                     variant={target === "REJECTED" ? "destructive" : "primary"}
                     size="sm"
-                    onClick={() => handleTransition(target)}
+                    onClick={() => {
+                      if (target === "SELECTED" || target === "REJECTED") {
+                        setPendingTerminalTransition(target);
+                      } else {
+                        handleTransition(target);
+                      }
+                    }}
                     disabled={isPending}
                   >
                     {isPending
@@ -266,6 +261,38 @@ export function StaffApplicationDetailClient({
                 ))}
               </div>
             </div>
+
+            <ConfirmationDialog
+              isOpen={pendingTerminalTransition !== null}
+              title={
+                pendingTerminalTransition === "SELECTED"
+                  ? "Confirm Candidate Selection"
+                  : "Confirm Application Rejection"
+              }
+              description={
+                pendingTerminalTransition === "SELECTED"
+                  ? "Marking this application as SELECTED will extend a final offer and transition the candidate to a terminal state. Are you sure you wish to proceed?"
+                  : "Marking this application as REJECTED will terminate this candidate's application process. Are you sure you wish to proceed?"
+              }
+              variant={
+                pendingTerminalTransition === "REJECTED" ? "danger" : "primary"
+              }
+              confirmLabel={
+                pendingTerminalTransition === "SELECTED"
+                  ? "Confirm Final Selection"
+                  : "Confirm Rejection"
+              }
+              cancelLabel="Cancel"
+              isPending={isPending}
+              onConfirm={() => {
+                if (pendingTerminalTransition) {
+                  const target = pendingTerminalTransition;
+                  setPendingTerminalTransition(null);
+                  handleTransition(target);
+                }
+              }}
+              onCancel={() => setPendingTerminalTransition(null)}
+            />
 
             <p className="text-xs text-[var(--color-text-secondary)]">
               Authorized transition pathways for {userRole}:{" "}

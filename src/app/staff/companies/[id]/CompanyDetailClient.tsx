@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import type { Database } from "@/types/database";
 import {
   submitUpdateCompany,
@@ -73,17 +74,16 @@ export function CompanyDetailClient({
     }
   }
 
-  async function handleToggleArchive() {
-    if (
-      !confirm(
-        company.is_archived
-          ? `Reactivate "${company.name}"?`
-          : `Archive "${company.name}"? Active invitations and new recruiter onboarding will be disabled.`
-      )
-    ) {
-      return;
-    }
+  type CompanyConfirmState =
+    | { type: "toggle_archive" }
+    | { type: "invite_contact"; contactId: string; name: string }
+    | { type: "revoke_invite"; invitationId: string; name: string }
+    | { type: "toggle_contact_active"; contact: RecruiterContactView }
+    | null;
 
+  const [confirmDialog, setConfirmDialog] = useState<CompanyConfirmState>(null);
+
+  function executeToggleArchive() {
     startTransition(async () => {
       const res = company.is_archived
         ? await submitReactivateCompany(company.id)
@@ -116,13 +116,7 @@ export function CompanyDetailClient({
     }
   }
 
-  async function handleInviteContact(contactId: string) {
-    if (
-      !confirm("Send official recruiter invitation email? Valid for 7 days.")
-    ) {
-      return;
-    }
-
+  function executeInviteContact(contactId: string) {
     startTransition(async () => {
       setActionError(null);
       setActionMessage(null);
@@ -139,9 +133,7 @@ export function CompanyDetailClient({
     });
   }
 
-  async function handleRevokeInvitation(invitationId: string) {
-    if (!confirm("Revoke this pending invitation?")) return;
-
+  function executeRevokeInvitation(invitationId: string) {
     startTransition(async () => {
       setActionError(null);
       setActionMessage(null);
@@ -156,18 +148,8 @@ export function CompanyDetailClient({
     });
   }
 
-  async function handleToggleContactActive(contact: RecruiterContactView) {
+  function executeToggleContactActive(contact: RecruiterContactView) {
     if (!contact.id) return;
-    if (
-      !confirm(
-        contact.is_active
-          ? `Deactivate ${contact.full_name || "this contact"}?`
-          : `Reactivate ${contact.full_name || "this contact"}?`
-      )
-    ) {
-      return;
-    }
-
     startTransition(async () => {
       setActionError(null);
       setActionMessage(null);
@@ -286,7 +268,7 @@ export function CompanyDetailClient({
                 variant={company.is_archived ? "secondary" : "destructive"}
                 size="sm"
                 disabled={isPending}
-                onClick={handleToggleArchive}
+                onClick={() => setConfirmDialog({ type: "toggle_archive" })}
               >
                 {company.is_archived ? "Reactivate Company" : "Archive Company"}
               </Button>
@@ -430,9 +412,14 @@ export function CompanyDetailClient({
                                   size="sm"
                                   disabled={isPending}
                                   onClick={() =>
-                                    handleRevokeInvitation(
-                                      contact.latest_invitation_id!
-                                    )
+                                    setConfirmDialog({
+                                      type: "revoke_invite",
+                                      invitationId:
+                                        contact.latest_invitation_id!,
+                                      name:
+                                        contact.full_name ||
+                                        "Recruiter Contact",
+                                    })
                                   }
                                 >
                                   Revoke
@@ -451,7 +438,13 @@ export function CompanyDetailClient({
                                   disabled={isPending}
                                   onClick={() =>
                                     contact.id &&
-                                    handleInviteContact(contact.id)
+                                    setConfirmDialog({
+                                      type: "invite_contact",
+                                      contactId: contact.id,
+                                      name:
+                                        contact.full_name ||
+                                        "Recruiter Contact",
+                                    })
                                   }
                                 >
                                   Invite
@@ -462,7 +455,12 @@ export function CompanyDetailClient({
                               variant="ghost"
                               size="sm"
                               disabled={isPending}
-                              onClick={() => handleToggleContactActive(contact)}
+                              onClick={() =>
+                                setConfirmDialog({
+                                  type: "toggle_contact_active",
+                                  contact,
+                                })
+                              }
                             >
                               {contact.is_active ? "Deactivate" : "Reactivate"}
                             </Button>
@@ -608,6 +606,84 @@ export function CompanyDetailClient({
           </div>
         </div>
       )}
+      {/* Accessible Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmDialog !== null}
+        title={
+          confirmDialog?.type === "toggle_archive"
+            ? company.is_archived
+              ? `Reactivate "${company.name}"`
+              : `Archive "${company.name}"`
+            : confirmDialog?.type === "invite_contact"
+              ? `Send Invitation to ${confirmDialog.name}`
+              : confirmDialog?.type === "revoke_invite"
+                ? `Revoke Invitation for ${confirmDialog.name}`
+                : confirmDialog?.type === "toggle_contact_active"
+                  ? confirmDialog.contact.is_active
+                    ? `Deactivate ${confirmDialog.contact.full_name || "Contact"}`
+                    : `Reactivate ${confirmDialog.contact.full_name || "Contact"}`
+                  : "Confirm Action"
+        }
+        description={
+          confirmDialog?.type === "toggle_archive"
+            ? company.is_archived
+              ? `Reactivating "${company.name}" will restore its active standing and allow new drive creation and recruiter invitations.`
+              : `Archiving "${company.name}" will disable active invitations and prevent new recruiter onboarding for this organization.`
+            : confirmDialog?.type === "invite_contact"
+              ? `An official recruiter invitation email valid for 7 days will be generated and dispatched.`
+              : confirmDialog?.type === "revoke_invite"
+                ? `This will immediately revoke the pending invitation. The invite link will become invalid.`
+                : confirmDialog?.type === "toggle_contact_active"
+                  ? confirmDialog.contact.is_active
+                    ? `Deactivating will revoke portal access and prevent this contact from authenticating.`
+                    : `Reactivating will restore this recruiter's active portal access.`
+                  : "Are you sure you wish to proceed?"
+        }
+        variant={
+          confirmDialog?.type === "toggle_archive"
+            ? company.is_archived
+              ? "primary"
+              : "danger"
+            : confirmDialog?.type === "revoke_invite"
+              ? "danger"
+              : confirmDialog?.type === "toggle_contact_active" &&
+                  confirmDialog.contact.is_active
+                ? "danger"
+                : "primary"
+        }
+        confirmLabel={
+          confirmDialog?.type === "toggle_archive"
+            ? company.is_archived
+              ? "Reactivate Company"
+              : "Archive Company"
+            : confirmDialog?.type === "invite_contact"
+              ? "Send Invitation"
+              : confirmDialog?.type === "revoke_invite"
+                ? "Revoke Invitation"
+                : confirmDialog?.type === "toggle_contact_active"
+                  ? confirmDialog.contact.is_active
+                    ? "Deactivate"
+                    : "Reactivate"
+                  : "Confirm"
+        }
+        cancelLabel="Cancel"
+        isPending={isPending}
+        onConfirm={() => {
+          if (!confirmDialog) return;
+          const current = confirmDialog;
+          setConfirmDialog(null);
+          if (current.type === "toggle_archive") {
+            executeToggleArchive();
+          } else if (current.type === "invite_contact") {
+            executeInviteContact(current.contactId);
+          } else if (current.type === "revoke_invite") {
+            executeRevokeInvitation(current.invitationId);
+          } else if (current.type === "toggle_contact_active") {
+            executeToggleContactActive(current.contact);
+          }
+        }}
+        onCancel={() => setConfirmDialog(null)}
+      />
     </div>
   );
 }

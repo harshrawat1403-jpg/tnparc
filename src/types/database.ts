@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -2633,6 +2633,21 @@ export type Database = {
         };
         Returns: Json;
       };
+      correct_published_drive: {
+        Args: {
+          p_application_deadline?: string;
+          p_compensation_details?: string;
+          p_description?: string;
+          p_drive_id: string;
+          p_location?: string;
+          p_package_lpa?: number;
+          p_reason: string;
+          p_requirements_info?: string;
+          p_stipend_monthly?: number;
+          p_title?: string;
+        };
+        Returns: Json;
+      };
       correct_student_academic_record: {
         Args: {
           p_active_backlogs: number;
@@ -2697,6 +2712,28 @@ export type Database = {
         Returns: Json;
       };
       deactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
+      get_audit_log_page: {
+        Args: {
+          p_action?: string;
+          p_end_date?: string;
+          p_entity_type?: string;
+          p_limit?: number;
+          p_offset?: number;
+          p_start_date?: string;
+        };
+        Returns: {
+          action: string;
+          actor_id: string;
+          actor_name: string;
+          actor_role: Database["public"]["Enums"]["user_role"];
+          created_at: string;
+          entity_id: string;
+          entity_type: string;
+          id: string;
+          metadata: Json;
+          total_count: number;
+        }[];
+      };
       get_my_announcements: {
         Args: { p_limit?: number; p_offset?: number };
         Returns: {

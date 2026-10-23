@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import {
   submitUpdateRecruiterContact,
   submitSendRecruiterInvitation,
@@ -97,15 +98,16 @@ export function RecruiterDetailClient({
     }
   }
 
-  async function handleInvite() {
-    if (
-      !confirm(
-        `Send official invitation email to ${contact.email}? Valid for 7 days.`
-      )
-    ) {
-      return;
-    }
+  type RecruiterConfirmState =
+    | { type: "invite" }
+    | { type: "revoke"; invitationId: string }
+    | { type: "toggle_active" }
+    | null;
 
+  const [confirmDialog, setConfirmDialog] =
+    useState<RecruiterConfirmState>(null);
+
+  function executeInvite() {
     startTransition(async () => {
       setActionError(null);
       setActionSuccess(null);
@@ -122,11 +124,7 @@ export function RecruiterDetailClient({
     });
   }
 
-  async function handleRevoke(invitationId: string) {
-    if (!confirm("Revoke this pending recruiter invitation?")) {
-      return;
-    }
-
+  function executeRevoke(invitationId: string) {
     startTransition(async () => {
       setActionError(null);
       setActionSuccess(null);
@@ -141,17 +139,7 @@ export function RecruiterDetailClient({
     });
   }
 
-  async function handleToggleActive() {
-    if (
-      !confirm(
-        contact.is_active
-          ? `Deactivate ${contact.full_name}?`
-          : `Reactivate ${contact.full_name}?`
-      )
-    ) {
-      return;
-    }
-
+  function executeToggleActive() {
     startTransition(async () => {
       setActionError(null);
       setActionSuccess(null);
@@ -245,7 +233,7 @@ export function RecruiterDetailClient({
                   variant="ghost"
                   size="sm"
                   disabled={isPending}
-                  onClick={handleToggleActive}
+                  onClick={() => setConfirmDialog({ type: "toggle_active" })}
                 >
                   {contact.is_active ? "Deactivate" : "Reactivate"}
                 </Button>
@@ -382,7 +370,12 @@ export function RecruiterDetailClient({
                   variant="destructive"
                   size="sm"
                   disabled={isPending}
-                  onClick={() => handleRevoke(latestPending.id)}
+                  onClick={() =>
+                    setConfirmDialog({
+                      type: "revoke",
+                      invitationId: latestPending.id,
+                    })
+                  }
                 >
                   Revoke Pending Invitation
                 </Button>
@@ -394,7 +387,7 @@ export function RecruiterDetailClient({
                     variant="primary"
                     size="sm"
                     disabled={isPending}
-                    onClick={handleInvite}
+                    onClick={() => setConfirmDialog({ type: "invite" })}
                   >
                     Send Invitation Link
                   </Button>
@@ -421,7 +414,12 @@ export function RecruiterDetailClient({
                 variant="destructive"
                 size="sm"
                 disabled={isPending}
-                onClick={() => handleRevoke(latestPending.id)}
+                onClick={() =>
+                  setConfirmDialog({
+                    type: "revoke",
+                    invitationId: latestPending.id,
+                  })
+                }
               >
                 Revoke
               </Button>
@@ -569,6 +567,65 @@ export function RecruiterDetailClient({
           </div>
         </div>
       )}
+      {/* Accessible Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmDialog !== null}
+        title={
+          confirmDialog?.type === "invite"
+            ? `Send Recruiter Invitation`
+            : confirmDialog?.type === "revoke"
+              ? `Revoke Recruiter Invitation`
+              : confirmDialog?.type === "toggle_active"
+                ? contact.is_active
+                  ? `Deactivate ${contact.full_name}`
+                  : `Reactivate ${contact.full_name}`
+                : "Confirm Action"
+        }
+        description={
+          confirmDialog?.type === "invite"
+            ? `An official recruiter invitation email will be dispatched to ${contact.email}, valid for 7 days.`
+            : confirmDialog?.type === "revoke"
+              ? `This will immediately invalidate the pending recruiter invitation link.`
+              : confirmDialog?.type === "toggle_active"
+                ? contact.is_active
+                  ? `Deactivating will revoke access and prevent this contact from authenticating.`
+                  : `Reactivating will restore this recruiter's active status.`
+                : "Are you sure you wish to proceed?"
+        }
+        variant={
+          confirmDialog?.type === "revoke"
+            ? "danger"
+            : confirmDialog?.type === "toggle_active" && contact.is_active
+              ? "danger"
+              : "primary"
+        }
+        confirmLabel={
+          confirmDialog?.type === "invite"
+            ? "Send Invitation"
+            : confirmDialog?.type === "revoke"
+              ? "Revoke Invitation"
+              : confirmDialog?.type === "toggle_active"
+                ? contact.is_active
+                  ? "Deactivate"
+                  : "Reactivate"
+                : "Confirm"
+        }
+        cancelLabel="Cancel"
+        isPending={isPending}
+        onConfirm={() => {
+          if (!confirmDialog) return;
+          const current = confirmDialog;
+          setConfirmDialog(null);
+          if (current.type === "invite") {
+            executeInvite();
+          } else if (current.type === "revoke") {
+            executeRevoke(current.invitationId);
+          } else if (current.type === "toggle_active") {
+            executeToggleActive();
+          }
+        }}
+        onCancel={() => setConfirmDialog(null)}
+      />
     </div>
   );
 }

@@ -8,3 +8,4 @@ export * from "./Container";
 export * from "./Heading";
 export * from "./Text";
 export * from "./Divider";
+export * from "./ConfirmationDialog";

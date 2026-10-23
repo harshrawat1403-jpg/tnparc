@@ -6,6 +6,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
@@ -61,6 +62,14 @@ export function StaffAnnouncementsClient({
     "ALL" | "STUDENTS" | "RECRUITERS" | "STAFF"
   >("ALL");
   const [editExpiresAt, setEditExpiresAt] = useState("");
+
+  type AnnouncementConfirmState =
+    | { type: "publish"; id: string; title: string }
+    | { type: "archive"; id: string; title: string }
+    | null;
+
+  const [confirmAction, setConfirmAction] =
+    useState<AnnouncementConfirmState>(null);
 
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -174,14 +183,7 @@ export function StaffAnnouncementsClient({
     });
   };
 
-  const handlePublish = (id: string) => {
-    if (
-      !confirm(
-        "Are you sure you want to publish this announcement? Content will become immutable."
-      )
-    ) {
-      return;
-    }
+  const executePublish = (id: string) => {
     setErrorMsg(null);
     setSuccessMsg(null);
 
@@ -207,14 +209,7 @@ export function StaffAnnouncementsClient({
     });
   };
 
-  const handleArchive = (id: string) => {
-    if (
-      !confirm(
-        "Are you sure you want to archive this announcement? It will be removed from all active feeds."
-      )
-    ) {
-      return;
-    }
+  const executeArchive = (id: string) => {
     setErrorMsg(null);
     setSuccessMsg(null);
 
@@ -399,7 +394,13 @@ export function StaffAnnouncementsClient({
                         </Button>
                         <Button
                           variant="primary"
-                          onClick={() => handlePublish(item.id)}
+                          onClick={() =>
+                            setConfirmAction({
+                              type: "publish",
+                              id: item.id,
+                              title: item.title,
+                            })
+                          }
                           disabled={isPending}
                           className="text-xs py-1.5 px-3"
                         >
@@ -410,7 +411,13 @@ export function StaffAnnouncementsClient({
                     {item.status !== "ARCHIVED" && (
                       <Button
                         variant="secondary"
-                        onClick={() => handleArchive(item.id)}
+                        onClick={() =>
+                          setConfirmAction({
+                            type: "archive",
+                            id: item.id,
+                            title: item.title,
+                          })
+                        }
                         disabled={isPending}
                         className="text-xs py-1.5 px-3 text-neutral-600 hover:text-red-700"
                       >
@@ -632,6 +639,39 @@ export function StaffAnnouncementsClient({
           </div>
         </div>
       )}
+      {/* Accessible Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmAction !== null}
+        title={
+          confirmAction?.type === "publish"
+            ? `Confirm Publication`
+            : `Confirm Archival`
+        }
+        description={
+          confirmAction?.type === "publish"
+            ? `Are you sure you want to publish "${confirmAction.title}"? Once published, its title, body, and audience become permanently immutable.`
+            : `Are you sure you want to archive "${confirmAction?.title}"? It will immediately be removed from all active feeds.`
+        }
+        variant={confirmAction?.type === "archive" ? "danger" : "primary"}
+        confirmLabel={
+          confirmAction?.type === "publish"
+            ? "Publish Announcement"
+            : "Archive Announcement"
+        }
+        cancelLabel="Cancel"
+        isPending={isPending}
+        onConfirm={() => {
+          if (!confirmAction) return;
+          const { type, id } = confirmAction;
+          setConfirmAction(null);
+          if (type === "publish") {
+            executePublish(id);
+          } else if (type === "archive") {
+            executeArchive(id);
+          }
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
     </div>
   );
 }

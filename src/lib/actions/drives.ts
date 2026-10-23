@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { normalizeError } from "@/lib/errors";
 
 export interface DriveActionResult {
   success?: string;
@@ -358,4 +359,60 @@ export async function submitRevokeRecruiterAccess(
   revalidatePath(`/staff/drives/${driveId}`);
   revalidatePath("/recruiter/drives");
   return { success: "Recruiter drive access revoked successfully." };
+}
+
+/**
+ * Staff (Super Admin & Secretary): Audited correction of an already-PUBLISHED drive
+ */
+export async function submitCorrectPublishedDrive(
+  driveId: string,
+  reason: string,
+  fields: {
+    title?: string;
+    description?: string;
+    location?: string;
+    applicationDeadline?: string;
+    packageLpa?: number;
+    stipendMonthly?: number;
+    compensationDetails?: string;
+    requirementsInfo?: string;
+  }
+): Promise<DriveActionResult> {
+  if (!reason || !reason.trim() || reason.trim().length < 5) {
+    return {
+      error: "A detailed correction reason (min 5 characters) is required.",
+    };
+  }
+
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.rpc("correct_published_drive", {
+      p_drive_id: driveId,
+      p_reason: reason.trim(),
+      p_title: fields.title?.trim() || undefined,
+      p_description: fields.description?.trim() || undefined,
+      p_location: fields.location?.trim() || undefined,
+      p_application_deadline: fields.applicationDeadline || undefined,
+      p_package_lpa: fields.packageLpa,
+      p_stipend_monthly: fields.stipendMonthly,
+      p_compensation_details: fields.compensationDetails?.trim() || undefined,
+      p_requirements_info: fields.requirementsInfo?.trim() || undefined,
+    });
+
+    if (error) {
+      const normalized = normalizeError(error);
+      return { error: normalized.message };
+    }
+
+    revalidatePath("/staff/drives");
+    revalidatePath(`/staff/drives/${driveId}`);
+    revalidatePath("/student/drives");
+    revalidatePath(`/student/drives/${driveId}`);
+    return {
+      success: "Published drive corrected successfully with audit log.",
+    };
+  } catch (err) {
+    const normalized = normalizeError(err);
+    return { error: normalized.message };
+  }
 }

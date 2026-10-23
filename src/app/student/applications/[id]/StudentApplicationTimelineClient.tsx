@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import {
   withdrawApplicationAction,
   type ApplicationStatus,
@@ -110,72 +111,56 @@ export function StudentApplicationTimelineClient({
       {/* Withdrawal Action Area */}
       {canWithdraw && (
         <div className="p-4 bg-[var(--color-bg-secondary)] rounded-lg border border-[var(--color-border)]">
-          {!showWithdrawConfirm ? (
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold text-[var(--color-text)]">
-                  Withdraw Application
-                </p>
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  You may withdraw your application while it is still in APPLIED
-                  status prior to the application deadline.
-                </p>
-              </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => setShowWithdrawConfirm(true)}
-                disabled={isPending}
-              >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-[var(--color-text)]">
                 Withdraw Application
-              </Button>
-            </div>
-          ) : (
-            <div className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-lg">
-              <p className="text-sm font-semibold text-red-800 dark:text-red-200 mb-1">
-                Confirm Permanent Withdrawal
               </p>
-              <p className="text-xs text-red-700 dark:text-red-300 mb-3">
-                Are you sure you want to withdraw from {driveTitle}? Per policy,
-                you will not be able to re-apply for this drive.
+              <p className="text-xs text-[var(--color-text-secondary)]">
+                You may withdraw your application while it is still in APPLIED
+                status prior to the application deadline.
               </p>
-
-              <div className="mb-3">
-                <label className="block text-xs font-medium text-[var(--color-text-secondary)] mb-1">
-                  Optional Reason:
-                </label>
-                <input
-                  type="text"
-                  value={withdrawReason}
-                  onChange={(e) => setWithdrawReason(e.target.value)}
-                  placeholder="e.g. Preparing for GATE, personal reasons"
-                  className="w-full text-xs p-2 rounded border border-[var(--color-border)] bg-[var(--color-bg)]"
-                  maxLength={200}
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handleWithdraw}
-                  disabled={isPending}
-                >
-                  {isPending
-                    ? "Withdrawing..."
-                    : "Confirm Permanent Withdrawal"}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setShowWithdrawConfirm(false)}
-                  disabled={isPending}
-                >
-                  Cancel
-                </Button>
-              </div>
             </div>
-          )}
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setShowWithdrawConfirm(true)}
+              disabled={isPending}
+            >
+              Withdraw Application
+            </Button>
+          </div>
+
+          <ConfirmationDialog
+            isOpen={showWithdrawConfirm}
+            title="Confirm Permanent Application Withdrawal"
+            description={`Are you sure you want to withdraw from ${driveTitle}? Per institutional policy, withdrawal is permanent and you will not be able to re-apply for this drive.`}
+            variant="danger"
+            confirmLabel="Confirm Permanent Withdrawal"
+            cancelLabel="Keep Application"
+            isPending={isPending}
+            onConfirm={handleWithdraw}
+            onCancel={() => setShowWithdrawConfirm(false)}
+          >
+            <div>
+              <label
+                htmlFor="withdraw-reason"
+                className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+              >
+                Optional Reason:
+              </label>
+              <input
+                id="withdraw-reason"
+                type="text"
+                value={withdrawReason}
+                onChange={(e) => setWithdrawReason(e.target.value)}
+                placeholder="e.g. Preparing for GATE, personal reasons"
+                className="w-full text-xs p-2 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                maxLength={200}
+                disabled={isPending}
+              />
+            </div>
+          </ConfirmationDialog>
         </div>
       )}
 

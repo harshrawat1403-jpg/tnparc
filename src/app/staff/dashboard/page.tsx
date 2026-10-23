@@ -394,6 +394,26 @@ export default async function StaffDashboardPage() {
                     </Button>
                   </Link>
                 </Card>
+
+                <Card padding="md">
+                  <div className="flex items-center justify-between mb-1">
+                    <Heading level={3} className="text-base">
+                      Institutional Audit Trail
+                    </Heading>
+                    <Badge variant="warning" size="sm">
+                      Security &amp; Audit
+                    </Badge>
+                  </div>
+                  <Text variant="secondary" className="text-xs mb-4">
+                    Inspect immutable append-only system audit logs, track
+                    operational transitions, and review administrative actions.
+                  </Text>
+                  <Link href="/admin/audit">
+                    <Button variant="secondary" size="sm" className="w-full">
+                      Audit Log Viewer →
+                    </Button>
+                  </Link>
+                </Card>
               </>
             )}
           </div>
