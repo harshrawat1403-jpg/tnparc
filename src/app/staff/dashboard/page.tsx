@@ -350,6 +350,52 @@ export default async function StaffDashboardPage() {
                 </div>
               )}
             </Card>
+
+            {["SUPER_ADMIN", "TNP_SECRETARY"].includes(profile.role) && (
+              <>
+                <Card padding="md">
+                  <div className="flex items-center justify-between mb-1">
+                    <Heading level={3} className="text-base">
+                      Placement Statistics
+                    </Heading>
+                    <Badge variant="default" size="sm">
+                      Analytics
+                    </Badge>
+                  </div>
+                  <Text variant="secondary" className="text-xs mb-4">
+                    Authoritative operational analytics, placement drives by
+                    year, conversion rates, repeat recruiters, and alumni
+                    insights.
+                  </Text>
+                  <Link href="/staff/statistics">
+                    <Button variant="primary" size="sm" className="w-full">
+                      View Department Statistics →
+                    </Button>
+                  </Link>
+                </Card>
+
+                <Card padding="md">
+                  <div className="flex items-center justify-between mb-1">
+                    <Heading level={3} className="text-base">
+                      Data Exports
+                    </Heading>
+                    <Badge variant="info" size="sm">
+                      Bounded CSV
+                    </Badge>
+                  </div>
+                  <Text variant="secondary" className="text-xs mb-4">
+                    Generate and download bounded institutional CSV reports for
+                    applications, drive results, selections, and corporate
+                    partners.
+                  </Text>
+                  <Link href="/staff/exports">
+                    <Button variant="secondary" size="sm" className="w-full">
+                      Configure Data Exports →
+                    </Button>
+                  </Link>
+                </Card>
+              </>
+            )}
           </div>
         </div>
       </Container>

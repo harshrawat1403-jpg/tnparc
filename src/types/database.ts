@@ -2859,6 +2859,61 @@ export type Database = {
           updated_at: string;
         }[];
       };
+      get_staff_companies_by_year: {
+        Args: { p_limit?: number; p_year?: number };
+        Returns: {
+          company_id: string;
+          company_name: string;
+          students_selected: number;
+          year: number;
+        }[];
+      };
+      get_staff_conversion_statistics: {
+        Args: { p_limit?: number; p_year?: number };
+        Returns: {
+          company_name: string;
+          conversion_pct: number;
+          drive_id: string;
+          drive_status: string;
+          drive_title: string;
+          drive_type: string;
+          published_year: number;
+          total_applied: number;
+          total_selected: number;
+        }[];
+      };
+      get_staff_drive_statistics: {
+        Args: { p_from_year?: number; p_to_year?: number };
+        Returns: {
+          internship_drives: number;
+          placement_drives: number;
+          total_drives: number;
+          year: number;
+        }[];
+      };
+      get_staff_export_data: {
+        Args: { p_export_type: string; p_filters?: Json };
+        Returns: Json;
+      };
+      get_staff_internship_placement_conversion: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          conversion_rate_pct: number;
+          converted_to_placement: number;
+          total_internship_selected: number;
+        }[];
+      };
+      get_staff_repeat_recruiters: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          company_id: string;
+          company_name: string;
+          first_year: number;
+          latest_year: number;
+          total_drives: number;
+          years_recruited: number;
+        }[];
+      };
       get_student_lifecycle_status: {
         Args: Record<PropertyKey, never>;
         Returns: Database["public"]["Enums"]["student_lifecycle_status"];
@@ -2915,6 +2970,14 @@ export type Database = {
         Returns: Json;
       };
       reactivate_skill: { Args: { p_skill_id: string }; Returns: Json };
+      record_export_audit: {
+        Args: {
+          p_export_type: string;
+          p_filter_summary?: Json;
+          p_row_count?: number;
+        };
+        Returns: boolean;
+      };
       register_skill_evidence_pdf: {
         Args: {
           p_description?: string;
