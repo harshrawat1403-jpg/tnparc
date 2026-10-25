@@ -21,6 +21,10 @@ const VIOLATION_PATTERNS = [
     pattern: /\b(test|it|describe)\.todo\b/,
     name: "test.todo / it.todo / describe.todo",
   },
+  {
+    pattern: /\b(test|it|describe)\.fixme\b/,
+    name: "test.fixme / it.fixme / describe.fixme",
+  },
   { pattern: /\b(xit|xdescribe)\b/, name: "xit / xdescribe" },
   {
     pattern: /\b(plan_skip_all|skip|todo|todo_start|todo_end)\s*\(/,

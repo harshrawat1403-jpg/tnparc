@@ -52,7 +52,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           id={selectId}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
-          className={`w-full px-3 py-2 text-sm bg-[var(--color-surface)] text-[var(--color-text-primary)] border rounded-[var(--radius-md)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--color-accent)] disabled:bg-[var(--color-surface-alt)] disabled:cursor-not-allowed ${
+          className={`w-full px-3 py-2.5 min-h-[44px] text-sm bg-[var(--color-surface)] text-[var(--color-text-primary)] border rounded-[var(--radius-md)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--color-accent)] disabled:bg-[var(--color-surface-alt)] disabled:cursor-not-allowed ${
             error
               ? "border-[var(--color-danger)] focus-visible:outline-[var(--color-danger)]"
               : "border-[var(--color-border)] hover:border-[var(--color-border-strong)]"

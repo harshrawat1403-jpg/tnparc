@@ -58,7 +58,7 @@ export default async function StaffAnnouncementsPage() {
   return (
     <div className="min-h-screen bg-neutral-50 pb-16">
       {/* Navigation Bar */}
-      <header className="bg-white border-b border-neutral-200">
+      <div className="bg-white border-b border-neutral-200">
         <Container className="py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -76,16 +76,16 @@ export default async function StaffAnnouncementsPage() {
             </div>
           </div>
         </Container>
-      </header>
+      </div>
 
-      <main id="main-content" tabIndex={-1} className="outline-none">
+      <div className="outline-none">
         <Container className="py-8">
           <StaffAnnouncementsClient
             initialAnnouncements={announcements || []}
             userRole={profile.role}
           />
         </Container>
-      </main>
+      </div>
     </div>
   );
 }

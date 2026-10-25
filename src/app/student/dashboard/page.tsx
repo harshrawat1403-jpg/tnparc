@@ -169,7 +169,7 @@ export default async function StudentDashboardPage() {
                   className={
                     studentProfile?.phone
                       ? "text-emerald-600 font-bold"
-                      : "text-neutral-400"
+                      : "text-[var(--color-text-secondary)] font-medium"
                   }
                 >
                   {studentProfile?.phone ? "✓" : "○"}
@@ -182,7 +182,7 @@ export default async function StudentDashboardPage() {
                   className={
                     studentProfile?.bio || studentProfile?.public_headline
                       ? "text-emerald-600 font-bold"
-                      : "text-neutral-400"
+                      : "text-[var(--color-text-secondary)] font-medium"
                   }
                 >
                   {studentProfile?.bio || studentProfile?.public_headline
@@ -197,7 +197,7 @@ export default async function StudentDashboardPage() {
                   className={
                     studentProfile?.linkedin_url
                       ? "text-emerald-600 font-bold"
-                      : "text-neutral-400"
+                      : "text-[var(--color-text-secondary)] font-medium"
                   }
                 >
                   {studentProfile?.linkedin_url ? "✓" : "○"}
@@ -208,7 +208,9 @@ export default async function StudentDashboardPage() {
               <div className="flex items-center gap-2">
                 <span
                   className={
-                    resume ? "text-emerald-600 font-bold" : "text-neutral-400"
+                    resume
+                      ? "text-emerald-600 font-bold"
+                      : "text-[var(--color-text-secondary)] font-medium"
                   }
                 >
                   {resume ? "✓" : "○"}

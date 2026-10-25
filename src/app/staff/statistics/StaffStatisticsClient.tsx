@@ -99,7 +99,7 @@ export function StaffStatisticsClient({
   return (
     <div className="min-h-screen bg-neutral-50 pb-20">
       {/* Top Header */}
-      <header className="bg-white border-b border-neutral-200">
+      <div className="bg-white border-b border-neutral-200">
         <Container className="py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -132,7 +132,7 @@ export function StaffStatisticsClient({
             </div>
           </div>
         </Container>
-      </header>
+      </div>
 
       {/* Navigation Tabs */}
       <nav
@@ -201,7 +201,7 @@ export function StaffStatisticsClient({
       </nav>
 
       {/* Main Content Area */}
-      <main id="main-content" tabIndex={-1} className="outline-none">
+      <div className="outline-none">
         <Container className="py-8 space-y-8">
           {/* Top Invariant Notice */}
           <div className="p-4 rounded-lg bg-blue-50/50 border border-blue-200/60 text-xs text-blue-900 flex items-start gap-3">
@@ -835,7 +835,7 @@ export function StaffStatisticsClient({
             </div>
           )}
         </Container>
-      </main>
+      </div>
     </div>
   );
 }

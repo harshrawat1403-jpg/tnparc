@@ -29,7 +29,7 @@ export const PublicFooter: React.FC = () => {
               <br />
               South Ambazari Road, Nagpur, Maharashtra — 440010, India
             </p>
-            <p className="text-xs text-[var(--color-text-disabled)] mt-2">
+            <p className="text-xs text-[var(--color-text-secondary)] mt-2">
               Facilitating architectural education, professional internships,
               and career placements.
             </p>
@@ -124,7 +124,7 @@ export const PublicFooter: React.FC = () => {
             © {currentYear} Department of Architecture & Planning, VNIT Nagpur.
             All rights reserved.
           </p>
-          <p className="text-[var(--color-text-disabled)]">
+          <p className="text-[var(--color-text-secondary)]">
             Dedicated Training & Placement Portal • Phase 1 Foundation
           </p>
         </div>

@@ -140,7 +140,7 @@ export function ConfirmationDialog({
             size="sm"
             onClick={onCancel}
             disabled={isPending}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto min-h-[44px]"
           >
             {cancelLabel}
           </Button>
@@ -152,7 +152,7 @@ export function ConfirmationDialog({
             size="sm"
             onClick={onConfirm}
             disabled={isPending}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto min-h-[44px]"
           >
             {isPending ? "Processing..." : confirmLabel}
           </Button>
