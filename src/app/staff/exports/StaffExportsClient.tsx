@@ -93,7 +93,7 @@ export function StaffExportsClient({ programs, drives, userRole }: Props) {
   return (
     <div className="min-h-screen bg-neutral-50 pb-20">
       {/* Top Header */}
-      <header className="bg-white border-b border-neutral-200">
+      <div className="bg-white border-b border-neutral-200">
         <Container className="py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -126,10 +126,10 @@ export function StaffExportsClient({ programs, drives, userRole }: Props) {
             </div>
           </div>
         </Container>
-      </header>
+      </div>
 
       {/* Main Content Area */}
-      <main id="main-content" tabIndex={-1} className="outline-none">
+      <div className="outline-none">
         <Container className="py-8 max-w-4xl space-y-6">
           {/* Institutional Privacy Warning Banner */}
           <div className="p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-3">
@@ -433,7 +433,7 @@ export function StaffExportsClient({ programs, drives, userRole }: Props) {
             </div>
           </Card>
         </Container>
-      </main>
+      </div>
     </div>
   );
 }

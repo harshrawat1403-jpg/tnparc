@@ -17,7 +17,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   const variantStyles = {
     default:
-      "bg-[var(--color-surface-alt)] text-[var(--color-text-secondary)] border-[var(--color-border)]",
+      "bg-[var(--color-surface-alt)] text-[#44403c] border-[var(--color-border)]",
     success: "bg-[#EBF7EE] text-[var(--color-success)] border-[#B7E4C7]",
     warning: "bg-[#FEF3C7] text-[var(--color-warning)] border-[#FDE68A]",
     danger: "bg-[#FEE2E2] text-[var(--color-danger)] border-[#FECACA]",

@@ -14,6 +14,11 @@
     "test:hygiene": "tsx scripts/check-test-hygiene.ts",
     "test:db": "npx supabase test db",
     "test:integration": "tsx --test --test-concurrency=1 -r ./tests/setup.cjs tests/auth-integration.test.ts tests/phase4-integration.test.ts tests/phase5-integration.test.ts tests/phase6-integration.test.ts tests/phase7-integration.test.ts tests/phase8-integration.test.ts tests/phase9-integration.test.ts tests/phase10-integration.test.ts tests/phase11-integration.test.ts tests/phase12-integration.test.ts tests/phase13-integration.test.ts tests/phase14-integration.test.ts",
+    "test:a11y": "playwright test tests/e2e/a11y.spec.ts",
+    "test:responsive": "playwright test tests/e2e/responsive.spec.ts",
+    "test:keyboard": "playwright test tests/e2e/keyboard.spec.ts",
+    "test:e2e": "playwright test",
+    "test:lighthouse": "lhci autorun",
     "test": "npm run test:hygiene && npm run test:db && npm run test:integration",
     "verify": "npm run lint && npm run typecheck && npm run format:check && npm run test && npm run build"
   },
@@ -26,6 +31,9 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.51.1",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

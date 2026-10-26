@@ -56,7 +56,7 @@ export default async function RecruiterAnnouncementsPage() {
   return (
     <div className="min-h-screen bg-neutral-50 pb-16">
       {/* Top Header */}
-      <header className="bg-white border-b border-neutral-200">
+      <div className="bg-white border-b border-neutral-200">
         <Container className="py-4">
           <div className="flex items-center justify-between">
             <Link
@@ -70,9 +70,9 @@ export default async function RecruiterAnnouncementsPage() {
             </span>
           </div>
         </Container>
-      </header>
+      </div>
 
-      <main id="main-content" tabIndex={-1} className="outline-none">
+      <div className="outline-none">
         <Container className="py-8 space-y-6">
           <div>
             <Heading level={1} className="text-2xl font-bold text-neutral-900">
@@ -144,7 +144,7 @@ export default async function RecruiterAnnouncementsPage() {
             </div>
           )}
         </Container>
-      </main>
+      </div>
     </div>
   );
 }
